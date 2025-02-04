@@ -14,8 +14,7 @@ export default function JobTracking() {
     "Port of Loading",
     "Port of Discharge",
     "In Transit",
-    "Delayed",
-    "Completed",
+    "Completed",  // Removed "Delayed" from the main stages
   ];
 
   useEffect(() => {
@@ -67,7 +66,7 @@ export default function JobTracking() {
             <h2 className="text-2xl font-semibold">
               Job Number: <span className="text-primary">{jobNumber}</span>
             </h2>
-            <span className={`px-4 py-2 rounded ${getStatusColor(jobData.status)}`}>
+            <span className={`px-4 py-2 rounded ${jobData.status === 'Delayed' ? 'bg-red-400' : getStatusColor(jobData.status)}`}>
               {jobData.status}
             </span>
           </div>
@@ -103,6 +102,16 @@ export default function JobTracking() {
               ))}
             </div>
           </div>
+
+          {/* Delayed Indicator */}
+          {jobData.status === "Delayed" && (
+            <div className="mt-6 flex items-center justify-center">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded-full bg-red-500"></div>
+                <span className="text-red-500 font-bold">Delayed</span>
+              </div>
+            </div>
+          )}
 
           {/* Description Section */}
           <div className="mt-6">
