@@ -14,7 +14,7 @@ export default function JobTracking() {
     "Port of Loading",
     "Port of Discharge",
     "In Transit",
-    "Completed",  // Removed "Delayed" from the main stages
+    "Completed",
   ];
 
   useEffect(() => {
@@ -57,13 +57,13 @@ export default function JobTracking() {
   };
 
   return (
-    <div className="flex flex-col items-center p-6 min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-primary mb-4">Track Your Shipment</h1>
+    <div className="flex flex-col items-center p-4 sm:p-6 min-h-screen bg-gray-100">
+      <h1 className="text-3xl sm:text-4xl font-bold text-primary mb-4">Track Your Shipment</h1>
 
       {jobData ? (
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">
+        <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 w-full max-w-3xl">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-0">
               Job Number: <span className="text-primary">{jobNumber}</span>
             </h2>
             <span className={`px-4 py-2 rounded ${jobData.status === 'Delayed' ? 'bg-red-400' : getStatusColor(jobData.status)}`}>
@@ -75,22 +75,15 @@ export default function JobTracking() {
           <div className="border-t pt-4">
             <h3 className="text-lg font-medium mb-4">Shipment Progress</h3>
 
-            <div className="relative flex items-center">
-              {/* Line Background */}
+            <div className="relative flex items-center overflow-x-auto sm:overflow-visible">
               <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-300 transform -translate-y-1/2 z-0"></div>
 
-              {/* Stages */}
               {stages.map((stage, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center relative z-10">
-                  {/* Circle */}
+                <div key={index} className="flex-1 flex flex-col items-center relative z-10 min-w-[70px]">
                   <div className={`w-6 h-6 rounded-full ${getStatusColor(stage)}`}></div>
-
-                  {/* Label */}
-                  <span className={`text-sm mt-2 text-center ${getLabelColor(stage)}`}>
+                  <span className={`text-xs sm:text-sm mt-2 text-center ${getLabelColor(stage)}`}>
                     {stage}
                   </span>
-
-                  {/* Fill Line */}
                   {index < stages.length - 1 && (
                     <div
                       className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-1 w-full ${
