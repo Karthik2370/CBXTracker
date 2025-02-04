@@ -21,21 +21,23 @@ export default function Home() {
     <div className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/background.jpg')" }}>
       
       {/* Navigation Bar */}
-      <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex justify-between items-center fixed w-full top-0 z-50">
-        <div className="flex items-center">
-          <img src="/logo.png" alt="CBX Logistics Logo" className="h-15 w-15 mr-3" />
-          <h1 className="text-2xl font-bold text-white">CBX Logistics</h1>
+      <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex flex-col sm:flex-row sm:justify-between items-center fixed w-full top-0 z-50">
+        <div className="flex items-center space-x-3">
+          <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto" />
+          <h1 className="text-xl sm:text-2xl font-bold text-white">CBX Logistics</h1>
         </div>
-        <div className="space-x-4">
+        
+        {/* Buttons */}
+        <div className="flex space-x-2 mt-3 sm:mt-0">
           <button
             onClick={() => navigateTo('/login?role=employee')}
-            className="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500"
+            className="bg-yellow-400 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-500"
           >
             Employee Login
           </button>
           <button
             onClick={() => navigateTo('/login?role=admin')}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-blue-700"
           >
             Admin Login
           </button>
@@ -44,8 +46,8 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center flex-grow pt-24 px-4 bg-black bg-opacity-40">
-        <h2 className="text-5xl font-extrabold text-white mb-4">Job Tracker</h2>
-        <p className="text-xl text-gray-200 mb-6">Track your shipment in real-time</p>
+        <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">Job Tracker</h2>
+        <p className="text-lg sm:text-xl text-gray-200 mb-6">Track your shipment in real-time</p>
 
         <div className="flex w-full max-w-md">
           <input
@@ -65,17 +67,17 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white p-4 flex flex-col md:flex-row justify-between items-center">
+      <footer className="bg-gray-800 text-white p-4 flex flex-col sm:flex-row justify-between items-center">
         
         {/* Copyright */}
-        <div className="text-center md:text-left mb-2 md:mb-0">
+        <div className="text-center sm:text-left mb-2 sm:mb-0">
           &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved.
         </div>
 
         {/* About CBX (Hover Info Above) */}
-        <div className="relative group cursor-pointer mb-2 md:mb-0">
+        <div className="relative group cursor-pointer mb-2 sm:mb-0">
           <span className="hover:underline">About CBX</span>
-          <div className="absolute left-0 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72">
+          <div className="absolute left-1/2 sm:left-0 transform sm:translate-x-0 -translate-x-1/2 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72">
             <p className="font-semibold">CBX Logistics</p>
             <p>D-2123, Oberoi Garden Estate,<br />
               Chandivali Farm Road, Sakinaka,<br />
