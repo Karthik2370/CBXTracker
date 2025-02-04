@@ -7,16 +7,13 @@ import { useRouter } from "next/router";
 export default function Dashboard() {
   const [jobNumber, setJobNumber] = useState("");
   const [status, setStatus] = useState("");
-  const [description, setDescription] = useState("");  // New description state
+  const [description, setDescription] = useState("");
   const [shipments, setShipments] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "jobs"), (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setShipments(data);
     });
 
@@ -34,14 +31,14 @@ export default function Dashboard() {
       await setDoc(jobRef, {
         jobNumber,
         status,
-        description,  // Add description to Firestore
+        description,
         lastUpdated: new Date().toISOString(),
       });
 
       alert("Shipment status updated!");
       setJobNumber("");
       setStatus("");
-      setDescription("");  // Reset description field
+      setDescription("");
     } catch (error) {
       console.error("Error updating shipment:", error.message);
       alert("Failed to update shipment.");
@@ -53,27 +50,20 @@ export default function Dashboard() {
     router.push("/login");
   };
 
-  // Navigate to Home Page
   const goToHome = () => {
-    router.push("/");  // Redirect to the main tracking page
+    router.push("/");
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       {/* Taskbar */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-primary">Employee Dashboard</h1>
-        <div className="flex space-x-4">
-          <button
-            onClick={goToHome}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-primary mb-2 sm:mb-0">Employee Dashboard</h1>
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+          <button onClick={goToHome} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full sm:w-auto">
             Home
           </button>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
+          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full sm:w-auto">
             Logout
           </button>
         </div>
@@ -81,52 +71,51 @@ export default function Dashboard() {
 
       {/* Update Job Status */}
       <div className="mt-6">
-        <h2 className="text-xl font-semibold">Update Job Status</h2>
-        <input
-          type="text"
-          placeholder="Enter Job Number"
-          className="border p-2 rounded w-full my-2"
-          value={jobNumber}
-          onChange={(e) => setJobNumber(e.target.value)}
-        />
-        <select
-          className="border p-2 rounded w-full my-2"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          <option value="">Select Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Initiated">Initiated</option>
-          <option value="Port of Loading">Port of Loading</option>
-          <option value="Port of Discharge">Port of Discharge</option>
-          <option value="In Transit">In Transit</option>
-          <option value="Delayed">Delayed</option>
-          <option value="Completed">Completed</option>
-        </select>
-        <textarea
-          placeholder="Enter Description"
-          className="border p-2 rounded w-full my-2"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
-        <button
-          onClick={handleUpdate}
-          className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
-        >
-          Update Status
-        </button>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Update Job Status</h2>
+        <div className="space-y-2">
+          <input
+            type="text"
+            placeholder="Enter Job Number"
+            className="border p-2 rounded w-full"
+            value={jobNumber}
+            onChange={(e) => setJobNumber(e.target.value)}
+          />
+          <select
+            className="border p-2 rounded w-full"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="">Select Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Initiated">Initiated</option>
+            <option value="Port of Loading">Port of Loading</option>
+            <option value="Port of Discharge">Port of Discharge</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delayed">Delayed</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <textarea
+            placeholder="Enter Description"
+            className="border p-2 rounded w-full"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+          <button onClick={handleUpdate} className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
+            Update Status
+          </button>
+        </div>
       </div>
 
       {/* Display All Shipments */}
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold">All Shipments</h2>
+      <div className="mt-8">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">All Shipments</h2>
         {shipments.length > 0 ? (
-          <ul>
+          <ul className="space-y-2">
             {shipments.map((shipment) => (
-              <li key={shipment.id} className="border-b py-2">
-                <strong>Job:</strong> {shipment.jobNumber} - 
-                <strong>Status:</strong> {shipment.status} - 
-                <strong>Description:</strong> {shipment.description || "N/A"} - 
+              <li key={shipment.id} className="border p-3 rounded">
+                <strong>Job:</strong> {shipment.jobNumber} <br />
+                <strong>Status:</strong> {shipment.status} <br />
+                <strong>Description:</strong> {shipment.description || "N/A"} <br />
                 <strong>Last Updated:</strong> {new Date(shipment.lastUpdated).toLocaleString()}
               </li>
             ))}
