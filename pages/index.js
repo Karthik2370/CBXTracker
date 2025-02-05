@@ -23,7 +23,7 @@ export default function Home() {
       
       {/* Navigation Bar */}
       <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex flex-col sm:flex-row sm:justify-between items-center fixed w-full top-0 z-50">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 cursor-pointer" onClick={() => window.open("http://cbxlogistics.com", "_blank")}>
           <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto" />
           <h1 className="text-xl sm:text-2xl font-bold text-white">CBX Logistics</h1>
         </div>
@@ -105,5 +105,3 @@ export default function Home() {
     </div>
   );
 }
-
-
