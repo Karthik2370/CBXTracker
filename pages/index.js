@@ -5,7 +5,8 @@ export default function Home() {
   const [jobNumber, setJobNumber] = useState("");
   const router = useRouter();
 
-  const handleTrack = () => {
+  const handleTrack = (e) => {
+    e.preventDefault(); // Prevent page reload on Enter key
     if (jobNumber.trim() !== "") {
       router.push(`/track/${jobNumber}`);
     } else {
@@ -49,7 +50,8 @@ export default function Home() {
         <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">Job Tracker</h2>
         <p className="text-lg sm:text-xl text-gray-200 mb-6">Track your shipment in real-time</p>
 
-        <div className="flex w-full max-w-md">
+        {/* Form to handle Enter key submission */}
+        <form onSubmit={handleTrack} className="flex w-full max-w-md">
           <input
             type="text"
             placeholder="Enter Job Number"
@@ -58,12 +60,12 @@ export default function Home() {
             className="p-3 border border-gray-300 rounded-l-md focus:outline-none w-full"
           />
           <button
-            onClick={handleTrack}
+            type="submit"  // This allows the Enter key to trigger the form submission
             className="bg-blue-600 text-white px-6 py-3 rounded-r-md hover:bg-blue-700"
           >
             Track
           </button>
-        </div>
+        </form>
       </div>
 
       {/* Footer */}
@@ -74,7 +76,7 @@ export default function Home() {
           &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved.
         </div>
 
-        {/* About CBX (Hover Info Above) */}
+        {/* About CBX */}
         <div className="relative group cursor-pointer mb-2 sm:mb-0">
           <span className="hover:underline">About CBX</span>
           <div className="absolute left-1/2 sm:left-0 transform sm:translate-x-0 -translate-x-1/2 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72">
