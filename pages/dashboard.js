@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
-import { collection, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, setDoc, addDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 
 export default function Dashboard() {
@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [shipments, setShipments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [employeeName, setEmployeeName] = useState("");
+  const [isExistingJob, setIsExistingJob] = useState(false);  // New state to track if job exists
   const router = useRouter();
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function Dashboard() {
 
       if (jobDoc.exists()) {
         const jobData = jobDoc.data();
+        setIsExistingJob(true);  // Mark as existing job
         setStatus(jobData.status || "");
         setDescription(jobData.description || "");
         setWeight(jobData.weight || "");
@@ -57,13 +59,9 @@ export default function Dashboard() {
         setTransitPoint(jobData.transitPoint || "");
         setPlanningDate(jobData.planningDate || "");
       } else {
-        setStatus("");
-        setDescription("");
-        setWeight("");
-        setNumPackages("");
-        setPoNumber("");
-        setTransitPoint("");
-        setPlanningDate("");
+        setIsExistingJob(false);  // Mark as new job
+        resetFormFields();
+        setJobNumber(inputJobNumber);  // Retain job number for new entry
       }
     }
   };
@@ -74,33 +72,57 @@ export default function Dashboard() {
       return;
     }
 
+    const user = auth.currentUser;
+    const jobRef = doc(db, "jobs", jobNumber);
+    const historyRef = collection(jobRef, "history");
+
     try {
-      const jobRef = doc(db, "jobs", jobNumber);
-      await setDoc(jobRef, {
-        jobNumber,
+      const updateData = isExistingJob
+        ? {
+            status,
+            description,
+            planningDate,  // Allow Planning Date to be updated
+            lastUpdated: new Date().toISOString(),
+          }
+        : {
+            jobNumber,
+            status,
+            description,
+            weight,
+            numPackages,
+            poNumber,
+            transitPoint,
+            planningDate,
+            lastUpdated: new Date().toISOString(),
+          };
+
+      await setDoc(jobRef, updateData, { merge: true });
+
+      await addDoc(historyRef, {
+        updatedBy: employeeName,
+        updatedAt: new Date().toISOString(),
         status,
         description,
-        weight,
-        numPackages,
-        poNumber,
-        transitPoint,
         planningDate,
-        lastUpdated: new Date().toISOString(),
       });
 
       alert("Shipment status updated!");
-      setJobNumber("");
-      setStatus("");
-      setDescription("");
-      setWeight("");
-      setNumPackages("");
-      setPoNumber("");
-      setTransitPoint("");
-      setPlanningDate("");
+      resetFormFields();
     } catch (error) {
       console.error("Error updating shipment:", error.message);
       alert("Failed to update shipment.");
     }
+  };
+
+  const resetFormFields = () => {
+    setStatus("");
+    setDescription("");
+    setWeight("");
+    setNumPackages("");
+    setPoNumber("");
+    setTransitPoint("");
+    setPlanningDate("");
+    setIsExistingJob(false);
   };
 
   const handleLogout = async () => {
@@ -131,13 +153,12 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Greeting with Bold & Darker Text */}
+      {/* Greeting */}
       <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Hello, {employeeName}!</h2>
 
       {/* Update Job Status Form */}
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
         <h2 className="text-xl sm:text-2xl font-semibold mb-4">Update Job Status</h2>
-
         <input
           type="text"
           placeholder="Enter Job Number"
@@ -145,7 +166,6 @@ export default function Dashboard() {
           value={jobNumber}
           onChange={handleJobNumberChange}
         />
-
         <select className="border p-2 rounded w-full mb-4" value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="">Select Status</option>
           <option value="Pending">Pending</option>
@@ -156,49 +176,49 @@ export default function Dashboard() {
           <option value="Delayed">Delayed</option>
           <option value="Completed">Completed</option>
         </select>
-
         <textarea
           placeholder="Enter Description"
           className="border p-2 rounded w-full mb-4"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
-
         <input
           type="text"
           placeholder="Enter Weight"
           className="border p-2 rounded w-full mb-4"
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
+          readOnly={isExistingJob}
         />
-
         <input
           type="number"
           placeholder="Enter Number of Packages"
           className="border p-2 rounded w-full mb-4"
           value={numPackages}
           onChange={(e) => setNumPackages(e.target.value)}
+          readOnly={isExistingJob}
         />
-
         <input
           type="text"
           placeholder="Enter PO Number"
           className="border p-2 rounded w-full mb-4"
           value={poNumber}
           onChange={(e) => setPoNumber(e.target.value)}
+          readOnly={isExistingJob}
         />
-
         <input
           type="text"
           placeholder="Enter Transit Point"
           className="border p-2 rounded w-full mb-4"
           value={transitPoint}
           onChange={(e) => setTransitPoint(e.target.value)}
+          readOnly={isExistingJob}
         />
-
+        
+        {/* Planning Date with Label */}
+        <label className="block text-gray-700 font-medium mb-1">Select Planning Date</label>
         <input
           type="date"
-          placeholder="Enter Planning Date"
           className="border p-2 rounded w-full mb-4"
           value={planningDate}
           onChange={(e) => setPlanningDate(e.target.value)}
@@ -209,7 +229,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Divider Between Update and Search Sections */}
+      {/* Divider */}
       <div className="my-8 border-t-2 border-gray-300"></div>
 
       {/* Search Shipments Section */}
