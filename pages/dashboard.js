@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
-import { collection, doc, setDoc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 
 export default function Dashboard() {
   const [jobNumber, setJobNumber] = useState("");
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
+  const [weight, setWeight] = useState("");
+  const [numPackages, setNumPackages] = useState("");
+  const [poNumber, setPoNumber] = useState("");
+  const [transitPoint, setTransitPoint] = useState("");
+  const [planningDate, setPlanningDate] = useState("");
   const [shipments, setShipments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -17,12 +24,53 @@ export default function Dashboard() {
       setShipments(data);
     });
 
+    const fetchEmployeeName = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, "roles", user.uid));
+        if (userDoc.exists()) {
+          setEmployeeName(userDoc.data().name || "Employee");
+        }
+      }
+    };
+
+    fetchEmployeeName();
+
     return () => unsubscribe();
   }, []);
 
+  const handleJobNumberChange = async (e) => {
+    const inputJobNumber = e.target.value;
+    setJobNumber(inputJobNumber);
+
+    if (inputJobNumber.trim()) {
+      const jobRef = doc(db, "jobs", inputJobNumber);
+      const jobDoc = await getDoc(jobRef);
+
+      if (jobDoc.exists()) {
+        const jobData = jobDoc.data();
+        setStatus(jobData.status || "");
+        setDescription(jobData.description || "");
+        setWeight(jobData.weight || "");
+        setNumPackages(jobData.numPackages || "");
+        setPoNumber(jobData.poNumber || "");
+        setTransitPoint(jobData.transitPoint || "");
+        setPlanningDate(jobData.planningDate || "");
+      } else {
+        setStatus("");
+        setDescription("");
+        setWeight("");
+        setNumPackages("");
+        setPoNumber("");
+        setTransitPoint("");
+        setPlanningDate("");
+      }
+    }
+  };
+
   const handleUpdate = async () => {
     if (!jobNumber || !status) {
-      alert("Please fill in Job Number, Status, and Description.");
+      alert("Please fill in Job Number and Status.");
       return;
     }
 
@@ -32,6 +80,11 @@ export default function Dashboard() {
         jobNumber,
         status,
         description,
+        weight,
+        numPackages,
+        poNumber,
+        transitPoint,
+        planningDate,
         lastUpdated: new Date().toISOString(),
       });
 
@@ -39,6 +92,11 @@ export default function Dashboard() {
       setJobNumber("");
       setStatus("");
       setDescription("");
+      setWeight("");
+      setNumPackages("");
+      setPoNumber("");
+      setTransitPoint("");
+      setPlanningDate("");
     } catch (error) {
       console.error("Error updating shipment:", error.message);
       alert("Failed to update shipment.");
@@ -54,68 +112,133 @@ export default function Dashboard() {
     router.push("/");
   };
 
+  const filteredShipments = shipments.filter((shipment) =>
+    (shipment.jobNumber || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-4 sm:p-6">
-      {/* Taskbar */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-primary mb-2 sm:mb-0">Employee Dashboard</h1>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-          <button onClick={goToHome} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full sm:w-auto">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-4 bg-gray-800 p-4 rounded shadow-md">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Employee Dashboard</h1>
+        <div className="flex space-x-4">
+          <button onClick={goToHome} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
             Home
           </button>
-          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full sm:w-auto">
+          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
             Logout
           </button>
         </div>
       </div>
 
-      {/* Update Job Status */}
-      <div className="mt-6">
+      {/* Greeting with Bold & Darker Text */}
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Hello, {employeeName}!</h2>
+
+      {/* Update Job Status Form */}
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
         <h2 className="text-xl sm:text-2xl font-semibold mb-4">Update Job Status</h2>
-        <div className="space-y-2">
-          <input
-            type="text"
-            placeholder="Enter Job Number"
-            className="border p-2 rounded w-full"
-            value={jobNumber}
-            onChange={(e) => setJobNumber(e.target.value)}
-          />
-          <select
-            className="border p-2 rounded w-full"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="">Select Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Initiated">Initiated</option>
-            <option value="Port of Loading">Port of Loading</option>
-            <option value="Port of Discharge">Port of Discharge</option>
-            <option value="In Transit">In Transit</option>
-            <option value="Delayed">Delayed</option>
-            <option value="Completed">Completed</option>
-          </select>
-          <textarea
-            placeholder="Enter Description"
-            className="border p-2 rounded w-full"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-          <button onClick={handleUpdate} className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
-            Update Status
-          </button>
-        </div>
+
+        <input
+          type="text"
+          placeholder="Enter Job Number"
+          className="border p-2 rounded w-full mb-4"
+          value={jobNumber}
+          onChange={handleJobNumberChange}
+        />
+
+        <select className="border p-2 rounded w-full mb-4" value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="">Select Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Initiated">Initiated</option>
+          <option value="Port of Loading">Port of Loading</option>
+          <option value="Port of Discharge">Port of Discharge</option>
+          <option value="In Transit">In Transit</option>
+          <option value="Delayed">Delayed</option>
+          <option value="Completed">Completed</option>
+        </select>
+
+        <textarea
+          placeholder="Enter Description"
+          className="border p-2 rounded w-full mb-4"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        ></textarea>
+
+        <input
+          type="text"
+          placeholder="Enter Weight"
+          className="border p-2 rounded w-full mb-4"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+        />
+
+        <input
+          type="number"
+          placeholder="Enter Number of Packages"
+          className="border p-2 rounded w-full mb-4"
+          value={numPackages}
+          onChange={(e) => setNumPackages(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Enter PO Number"
+          className="border p-2 rounded w-full mb-4"
+          value={poNumber}
+          onChange={(e) => setPoNumber(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Enter Transit Point"
+          className="border p-2 rounded w-full mb-4"
+          value={transitPoint}
+          onChange={(e) => setTransitPoint(e.target.value)}
+        />
+
+        <input
+          type="date"
+          placeholder="Enter Planning Date"
+          className="border p-2 rounded w-full mb-4"
+          value={planningDate}
+          onChange={(e) => setPlanningDate(e.target.value)}
+        />
+
+        <button onClick={handleUpdate} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
+          Update Status
+        </button>
+      </div>
+
+      {/* Divider Between Update and Search Sections */}
+      <div className="my-8 border-t-2 border-gray-300"></div>
+
+      {/* Search Shipments Section */}
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Search Shipments</h2>
+        <input
+          type="text"
+          placeholder="Search by Job Number"
+          className="border p-2 rounded w-full mb-4"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {/* Display All Shipments */}
-      <div className="mt-8">
+      <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg shadow-md">
         <h2 className="text-xl sm:text-2xl font-semibold mb-4">All Shipments</h2>
-        {shipments.length > 0 ? (
+        {filteredShipments.length > 0 ? (
           <ul className="space-y-2">
-            {shipments.map((shipment) => (
-              <li key={shipment.id} className="border p-3 rounded">
+            {filteredShipments.map((shipment) => (
+              <li key={shipment.id} className="border p-3 rounded bg-gray-50">
                 <strong>Job:</strong> {shipment.jobNumber} <br />
                 <strong>Status:</strong> {shipment.status} <br />
                 <strong>Description:</strong> {shipment.description || "N/A"} <br />
+                <strong>Weight:</strong> {shipment.weight || "N/A"} <br />
+                <strong>No. of Packages:</strong> {shipment.numPackages || "N/A"} <br />
+                <strong>PO Number:</strong> {shipment.poNumber || "N/A"} <br />
+                <strong>Transit Point:</strong> {shipment.transitPoint || "N/A"} <br />
+                <strong>Planning Date:</strong> {shipment.planningDate || "N/A"} <br />
                 <strong>Last Updated:</strong> {new Date(shipment.lastUpdated).toLocaleString()}
               </li>
             ))}
