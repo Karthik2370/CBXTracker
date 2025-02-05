@@ -1,7 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 body {
-    background-color: lightblue;
+  background-color: lightblue;
+}
+
+/* Print-specific styling */
+@media print {
+  /* Hide elements that shouldn't appear in print (e.g., buttons) */
+  .print\:hidden {
+    display: none !important;
   }
-  
+
+  /* Ensure the content takes full page width without browser margins */
+  @page {
+    margin: 0;
+  }
+
+  /* Adjust body for print: remove background color and fix layout */
+  body {
+    background-color: white !important;
+    -webkit-print-color-adjust: exact; /* Ensures color accuracy in Webkit browsers */
+    print-color-adjust: exact; /* Ensures color accuracy in other browsers */
+    padding: 20px;
+  }
+
+  /* Center the content for better presentation */
+  .print\:center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
