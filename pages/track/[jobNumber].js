@@ -60,28 +60,45 @@ export default function JobTracking() {
     router.push("/");
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="flex flex-col items-center p-4 sm:p-6 min-h-screen bg-gray-100">
       {/* Home Button */}
-      <div className="w-full flex justify-end mb-4">
+      <div className="w-full flex justify-between mb-4 print:hidden">
         <button
           onClick={goToHome}
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Home
         </button>
+        <button
+          onClick={handlePrint}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Print
+        </button>
       </div>
 
-      <h1 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
+      {/* Header with Logo */}
+      <div className="flex items-center justify-center mb-4">
+        <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto mr-2" />
+        <h1 className="text-3xl sm:text-4xl font-bold text-primary">CBX Logistics</h1>
+      </div>
+
+      {/* Remove "Track Your Shipment" only during print */}
+      <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4 print:hidden">
         Track Your Shipment
-      </h1>
+      </h2>
 
       {jobData ? (
         <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 w-full max-w-3xl">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-0">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-0">
               Job Number: <span className="text-primary">{jobNumber}</span>
-            </h2>
+            </h3>
             <span
               className={`px-4 py-2 rounded ${
                 jobData.status === "Delayed"
@@ -95,7 +112,7 @@ export default function JobTracking() {
 
           {/* Shipment Progress */}
           <div className="border-t pt-4">
-            <h3 className="text-lg font-medium mb-4">Shipment Progress</h3>
+            <h4 className="text-lg font-medium mb-4">Shipment Progress</h4>
             <div className="relative flex items-center overflow-x-auto sm:overflow-visible">
               <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-300 transform -translate-y-1/2 z-0"></div>
               {stages.map((stage, index) => (
@@ -131,7 +148,7 @@ export default function JobTracking() {
 
           {/* Description Section */}
           <div className="mt-6">
-            <h3 className="text-lg font-medium mb-2">Shipment Description</h3>
+            <h4 className="text-lg font-medium mb-2">Shipment Description</h4>
             <p className="text-gray-700">
               {jobData.description || "No description provided."}
             </p>
@@ -140,11 +157,11 @@ export default function JobTracking() {
           {/* Transit Point & Planning Date */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <h3 className="text-lg font-medium">Transit Point:</h3>
+              <h4 className="text-lg font-medium">Transit Point:</h4>
               <p className="text-gray-700">{jobData.transitPoint || "Not specified"}</p>
             </div>
             <div>
-              <h3 className="text-lg font-medium">Planning Date:</h3>
+              <h4 className="text-lg font-medium">Planning Date:</h4>
               <p className="text-gray-700">
                 {jobData.planningDate ? new Date(jobData.planningDate).toLocaleDateString() : "Not specified"}
               </p>
@@ -153,7 +170,7 @@ export default function JobTracking() {
 
           {/* Cargo Details */}
           <div className="mt-6">
-            <h3 className="text-lg font-medium mb-2">Cargo Details:</h3>
+            <h4 className="text-lg font-medium mb-2">Cargo Details:</h4>
             <ul className="list-disc list-inside text-gray-700">
               <li>Weight: {jobData.weight || "N/A"}</li>
               <li>Number of Packages: {jobData.numPackages || "N/A"}</li>
