@@ -56,9 +56,25 @@ export default function JobTracking() {
     return "text-gray-500";
   };
 
+  const goToHome = () => {
+    router.push("/");
+  };
+
   return (
     <div className="flex flex-col items-center p-4 sm:p-6 min-h-screen bg-gray-100">
-      <h1 className="text-3xl sm:text-4xl font-bold text-primary mb-4">Track Your Shipment</h1>
+      {/* Home Button */}
+      <div className="w-full flex justify-end mb-4">
+        <button
+          onClick={goToHome}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Home
+        </button>
+      </div>
+
+      <h1 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
+        Track Your Shipment
+      </h1>
 
       {jobData ? (
         <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 w-full max-w-3xl">
@@ -66,7 +82,13 @@ export default function JobTracking() {
             <h2 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-0">
               Job Number: <span className="text-primary">{jobNumber}</span>
             </h2>
-            <span className={`px-4 py-2 rounded ${jobData.status === 'Delayed' ? 'bg-red-400' : getStatusColor(jobData.status)}`}>
+            <span
+              className={`px-4 py-2 rounded ${
+                jobData.status === "Delayed"
+                  ? "bg-red-400"
+                  : getStatusColor(jobData.status)
+              }`}
+            >
               {jobData.status}
             </span>
           </div>
@@ -74,12 +96,13 @@ export default function JobTracking() {
           {/* Shipment Progress */}
           <div className="border-t pt-4">
             <h3 className="text-lg font-medium mb-4">Shipment Progress</h3>
-
             <div className="relative flex items-center overflow-x-auto sm:overflow-visible">
               <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-300 transform -translate-y-1/2 z-0"></div>
-
               {stages.map((stage, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center relative z-10 min-w-[70px]">
+                <div
+                  key={index}
+                  className="flex-1 flex flex-col items-center relative z-10 min-w-[70px]"
+                >
                   <div className={`w-6 h-6 rounded-full ${getStatusColor(stage)}`}></div>
                   <span className={`text-xs sm:text-sm mt-2 text-center ${getLabelColor(stage)}`}>
                     {stage}
@@ -109,7 +132,33 @@ export default function JobTracking() {
           {/* Description Section */}
           <div className="mt-6">
             <h3 className="text-lg font-medium mb-2">Shipment Description</h3>
-            <p className="text-gray-700">{jobData.description || "No description provided."}</p>
+            <p className="text-gray-700">
+              {jobData.description || "No description provided."}
+            </p>
+          </div>
+
+          {/* Transit Point & Planning Date */}
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-lg font-medium">Transit Point:</h3>
+              <p className="text-gray-700">{jobData.transitPoint || "Not specified"}</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-medium">Planning Date:</h3>
+              <p className="text-gray-700">
+                {jobData.planningDate ? new Date(jobData.planningDate).toLocaleDateString() : "Not specified"}
+              </p>
+            </div>
+          </div>
+
+          {/* Cargo Details */}
+          <div className="mt-6">
+            <h3 className="text-lg font-medium mb-2">Cargo Details:</h3>
+            <ul className="list-disc list-inside text-gray-700">
+              <li>Weight: {jobData.weight || "N/A"}</li>
+              <li>Number of Packages: {jobData.numPackages || "N/A"}</li>
+              <li>PO Number: {jobData.poNumber || "N/A"}</li>
+            </ul>
           </div>
 
           {/* Last Updated */}
