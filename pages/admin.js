@@ -1,97 +1,57 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
-import { signOut, createUserWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
-import { collection, getDocs, onSnapshot, doc, deleteDoc, setDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
+import { collection, onSnapshot, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 
 export default function AdminDashboard() {
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("employee");
   const [employees, setEmployees] = useState([]);
-  const [jobNumber, setJobNumber] = useState("");
   const [jobs, setJobs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [adminName, setAdminName] = useState("Admin");
   const router = useRouter();
 
-  // Navigate to Home
   const goToHome = () => router.push("/");
 
-  // Fetch employees and jobs from Firestore
+  // Fetch Admin Name, Employees, and Jobs
   useEffect(() => {
-    const fetchEmployees = async () => {
-      const querySnapshot = await getDocs(collection(db, "roles"));
-      const data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setEmployees(data);
+    const fetchAdminData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const docRef = doc(db, "roles", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setAdminName(docSnap.data().name || "Admin");
+        }
+      }
     };
 
-    fetchEmployees();
+    fetchAdminData();
 
-    const unsubscribe = onSnapshot(collection(db, "jobs"), (snapshot) => {
+    const unsubscribeEmployees = onSnapshot(collection(db, "roles"), (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setEmployees(data);
+    });
+
+    const unsubscribeJobs = onSnapshot(collection(db, "jobs"), (snapshot) => {
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setJobs(data);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeEmployees();
+      unsubscribeJobs();
+    };
   }, []);
-
-  // Add Employee
-  const handleAddEmployee = async () => {
-    if (!email || !role) {
-      alert("Please fill in both email and role.");
-      return;
-    }
-
-    try {
-      const existingUsersSnapshot = await getDocs(collection(db, "roles"));
-      const existingUser = existingUsersSnapshot.docs.find(doc => doc.data().email === email);
-
-      if (existingUser) {
-        alert("This email is already registered.");
-        return;
-      }
-
-      const defaultPassword = "TempPassword123!";
-      const userCredential = await createUserWithEmailAndPassword(auth, email, defaultPassword);
-      const user = userCredential.user;
-
-      await setDoc(doc(db, "roles", user.uid), { email, role });
-      await sendPasswordResetEmail(auth, email);
-
-      alert(`Employee added successfully! A password reset email has been sent to ${email}.`);
-      setEmail("");
-      setRole("employee");
-
-    } catch (error) {
-      console.error("Error adding employee:", error.code, error.message);
-      alert("Failed to add employee. Check console for details.");
-    }
-  };
 
   // Remove Employee
   const handleRemoveEmployee = async (id) => {
     try {
       await deleteDoc(doc(db, "roles", id));
-      alert("Employee removed from Firestore.");
+      alert("Employee removed successfully!");
     } catch (error) {
       console.error("Error removing employee:", error.message);
       alert("Failed to remove employee.");
-    }
-  };
-
-  // Create Job
-  const handleCreateJob = async () => {
-    if (!jobNumber) return alert("Enter a Job Number");
-
-    try {
-      await setDoc(doc(db, "jobs", jobNumber), {
-        jobNumber,
-        status: "Pending",
-        lastUpdated: new Date(),
-      });
-      alert("Job created successfully!");
-      setJobNumber("");
-    } catch (error) {
-      console.error("Error creating job:", error);
-      alert("Failed to create job.");
     }
   };
 
@@ -101,8 +61,13 @@ export default function AdminDashboard() {
     router.push("/login");
   };
 
+  // Filter Jobs Based on Search Query
+  const filteredJobs = jobs.filter((job) =>
+    (job.jobNumber || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 sm:p-6 bg-blue-50 min-h-screen">
       {/* Taskbar */}
       <div className="flex flex-col sm:flex-row justify-between items-center bg-gray-800 p-3 rounded shadow-md mb-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-0">Admin Dashboard</h1>
@@ -116,37 +81,22 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Employee Management Section */}
-      <div className="mt-6">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Manage Employees</h2>
+      {/* Welcome Message */}
+      <h2 className="text-xl sm:text-2xl font-semibold mb-6">Hello, {adminName}!</h2>
 
-        <div className="mb-6 space-y-2">
-          <input
-            type="email"
-            placeholder="Enter Employee Email"
-            className="border p-2 rounded w-full"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <select
-            className="border p-2 rounded w-full"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="employee">Employee</option>
-            <option value="admin">Admin</option>
-          </select>
-          <button onClick={handleAddEmployee} className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">
-            Add Employee
-          </button>
-        </div>
+      {/* Employee Management Section (Only View & Remove) */}
+      <div>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Manage Employees</h2>
 
         {/* List of Employees */}
         <ul className="space-y-2">
           {employees.map((emp) => (
-            <li key={emp.id} className="border p-3 rounded flex flex-col sm:flex-row justify-between items-center">
-              <span>{emp.email} - <strong>{emp.role}</strong></span>
-              <button onClick={() => handleRemoveEmployee(emp.id)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 mt-2 sm:mt-0">
+            <li key={emp.id} className="border p-3 rounded flex flex-col sm:flex-row justify-between items-center bg-white shadow-sm">
+              <span>{emp.name} ({emp.email}) - <strong>{emp.role}</strong></span>
+              <button
+                onClick={() => handleRemoveEmployee(emp.id)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 mt-2 sm:mt-0"
+              >
                 Remove
               </button>
             </li>
@@ -156,29 +106,37 @@ export default function AdminDashboard() {
 
       {/* Job Management Section */}
       <div className="mt-8">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Manage Jobs</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">View Jobs</h2>
 
-        <div className="mb-6 space-y-2">
-          <input
-            type="text"
-            placeholder="Enter Job Number"
-            className="border p-2 rounded w-full"
-            value={jobNumber}
-            onChange={(e) => setJobNumber(e.target.value)}
-          />
-          <button onClick={handleCreateJob} className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">
-            Create Job
-          </button>
-        </div>
+        {/* Search Bar */}
+        <input
+          type="text"
+          placeholder="Search by Job Number"
+          className="border p-2 rounded w-full mb-4"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
 
-        {/* List of Jobs */}
-        <ul className="space-y-2">
-          {jobs.map((job) => (
-            <li key={job.id} className="border p-3 rounded">
-              <strong>Job Number:</strong> {job.jobNumber} - <strong>Status:</strong> {job.status}
-            </li>
-          ))}
-        </ul>
+        {/* Display All Jobs */}
+        {filteredJobs.length > 0 ? (
+          <ul className="space-y-2">
+            {filteredJobs.map((job) => (
+              <li key={job.id} className="border p-3 rounded bg-white shadow-sm">
+                <strong>Job:</strong> {job.jobNumber} <br />
+                <strong>Status:</strong> {job.status} <br />
+                <strong>Description:</strong> {job.description || "N/A"} <br />
+                <strong>Weight:</strong> {job.weight || "N/A"} <br />
+                <strong>No. of Packages:</strong> {job.numPackages || "N/A"} <br />
+                <strong>PO Number:</strong> {job.poNumber || "N/A"} <br />
+                <strong>Transit Point:</strong> {job.transitPoint || "N/A"} <br />
+                <strong>Planning Date:</strong> {job.planningDate || "N/A"} <br />
+                <strong>Last Updated:</strong> {new Date(job.lastUpdated).toLocaleString()}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No jobs found.</p>
+        )}
       </div>
     </div>
   );
