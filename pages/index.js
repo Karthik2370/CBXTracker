@@ -73,7 +73,7 @@ export default function Home() {
         
         {/* Copyright */}
         <div className="text-center sm:text-left mb-2 sm:mb-0">
-          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved.
+          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved. Made by Karthik
         </div>
 
         {/* About CBX */}
