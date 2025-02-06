@@ -16,7 +16,9 @@ export default function Dashboard() {
   const [shipments, setShipments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [employeeName, setEmployeeName] = useState("");
-  const [isExistingJob, setIsExistingJob] = useState(false);  // New state to track if job exists
+  const [isExistingJob, setIsExistingJob] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [entriesPerPage, setEntriesPerPage] = useState(5);
   const router = useRouter();
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export default function Dashboard() {
     });
 
     const fetchEmployeeName = async () => {
-      const user = auth.currentUser;
+      const user = auth.currentUser ;
       if (user) {
         const userDoc = await getDoc(doc(db, "roles", user.uid));
         if (userDoc.exists()) {
@@ -50,7 +52,7 @@ export default function Dashboard() {
 
       if (jobDoc.exists()) {
         const jobData = jobDoc.data();
-        setIsExistingJob(true);  // Mark as existing job
+        setIsExistingJob(true);
         setStatus(jobData.status || "");
         setDescription(jobData.description || "");
         setWeight(jobData.weight || "");
@@ -59,9 +61,9 @@ export default function Dashboard() {
         setTransitPoint(jobData.transitPoint || "");
         setPlanningDate(jobData.planningDate || "");
       } else {
-        setIsExistingJob(false);  // Mark as new job
+        setIsExistingJob(false);
         resetFormFields();
-        setJobNumber(inputJobNumber);  // Retain job number for new entry
+        setJobNumber(inputJobNumber);
       }
     }
   };
@@ -72,7 +74,7 @@ export default function Dashboard() {
       return;
     }
 
-    const user = auth.currentUser;
+    const user = auth.currentUser ;
     const jobRef = doc(db, "jobs", jobNumber);
     const historyRef = collection(jobRef, "history");
 
@@ -81,7 +83,7 @@ export default function Dashboard() {
         ? {
             status,
             description,
-            planningDate,  // Allow Planning Date to be updated
+            planningDate,
             lastUpdated: new Date().toISOString(),
           }
         : {
@@ -137,6 +139,14 @@ export default function Dashboard() {
   const filteredShipments = shipments.filter((shipment) =>
     (shipment.jobNumber || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Sort shipments by lastUpdated in descending order
+  const sortedShipments = filteredShipments.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+
+  // Pagination Logic
+  const indexOfLastShipment = currentPage * entriesPerPage;
+  const indexOfFirstShipment = indexOfLastShipment - entriesPerPage;
+  const currentShipments = sortedShipments.slice(indexOfFirstShipment, indexOfLastShipment);
 
   return (
     <div className="p-4 sm:p-6">
@@ -247,9 +257,9 @@ export default function Dashboard() {
       {/* Display All Shipments */}
       <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg shadow-md">
         <h2 className="text-xl sm:text-2xl font-semibold mb-4">All Shipments</h2>
-        {filteredShipments.length > 0 ? (
+        {currentShipments.length > 0 ? (
           <ul className="space-y-2">
-            {filteredShipments.map((shipment) => (
+            {currentShipments.map((shipment) => (
               <li key={shipment.id} className="border p-3 rounded bg-gray-50">
                 <strong>Job:</strong> {shipment.jobNumber} <br />
                 <strong>Status:</strong> {shipment.status} <br />
@@ -266,6 +276,25 @@ export default function Dashboard() {
         ) : (
           <p>No shipments found.</p>
         )}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span>Page {currentPage}</span>
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={indexOfLastShipment >= sortedShipments.length}
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
