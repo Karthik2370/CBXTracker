@@ -26,7 +26,9 @@ export default function Home() {
       {/* Navigation Bar */}
       <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex flex-col sm:flex-row sm:justify-between items-center fixed w-full top-0 z-50">
         <div className="flex items-center space-x-3 cursor-pointer relative">
-          <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto hover:drop-shadow-glow transition-transform duration-300 ease-in-out hover:scale-105" />
+          <a href="http://cbxlogistics.com" target="_blank" rel="noopener noreferrer">
+  <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto hover:drop-shadow-glow transition-transform duration-300 ease-in-out hover:scale-105" />
+          </a>
 
           {/* CBX Logistics with Hover Effect */}
           <div className="relative group">
