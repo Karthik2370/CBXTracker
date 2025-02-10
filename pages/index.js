@@ -85,7 +85,7 @@ export default function Home() {
       <footer className="bg-gray-800 text-white p-4 flex justify-between items-center">
         {/* Copyright */}
         <div className="text-center sm:text-left">
-          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved.
+          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved. Made by Karthik Nambiar
         </div>
 
         {/* Contact Us with Hover Info */}
