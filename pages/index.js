@@ -78,7 +78,7 @@ export default function Home() {
 
         {/* About CBX */}
         <div className="relative group cursor-pointer mb-2 sm:mb-0">
-          <span className="hover:underline">About CBX</span>
+          <span className="hover:underline">CBX Info</span>
           <div className="absolute left-1/2 sm:left-0 transform sm:translate-x-0 -translate-x-1/2 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72">
             <p className="font-semibold">CBX Logistics</p>
             <p>D-2123, Oberoi Garden Estate,<br />
