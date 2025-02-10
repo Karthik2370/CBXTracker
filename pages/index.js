@@ -73,13 +73,15 @@ export default function Home() {
         
         {/* Copyright */}
         <div className="text-center sm:text-left mb-2 sm:mb-0">
-          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved. Made by Karthik Nambiar
+          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved.
         </div>
 
-        {/* About CBX */}
-        <div className="relative group cursor-pointer mb-2 sm:mb-0">
-          <span className="hover:underline">CBX Info</span>
-          <div className="absolute left-1/2 sm:left-0 transform sm:translate-x-0 -translate-x-1/2 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72">
+        {/* Contact Us with Hover - Now aligned to the left */}
+        <div className="relative group">
+          <a href="mailto:info@cbxlogistics.com" className="hover:underline text-white">
+            Contact Us
+          </a>
+          <div className="absolute right-full mr-4 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72 text-sm text-left">
             <p className="font-semibold">CBX Logistics</p>
             <p>D-2123, Oberoi Garden Estate,<br />
               Chandivali Farm Road, Sakinaka,<br />
@@ -92,15 +94,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Contact Us */}
-        <div>
-          <a
-            href="mailto:info@cbxlogistics.com"
-            className="hover:underline text-blue-400"
-          >
-            Contact Us
-          </a>
-        </div>
       </footer>
     </div>
   );
