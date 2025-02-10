@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleTrack = (e) => {
-    e.preventDefault(); // Prevent page reload on Enter key
+    e.preventDefault();
     if (jobNumber.trim() !== "") {
       router.push(`/track/${jobNumber}`);
     } else {
@@ -23,22 +23,25 @@ export default function Home() {
       
       {/* Navigation Bar */}
       <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex flex-col sm:flex-row sm:justify-between items-center fixed w-full top-0 z-50">
-        <div className="flex items-center space-x-3 cursor-pointer" onClick={() => window.open("http://cbxlogistics.com", "_blank")}>
-          <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto" />
+        <div
+          className="flex items-center space-x-3 cursor-pointer logo"
+          onClick={() => window.open("http://cbxlogistics.com", "_blank")}
+        >
+          <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto hover:drop-shadow-glow transition-transform duration-300 ease-in-out hover:scale-105" />
           <h1 className="text-xl sm:text-2xl font-bold text-white">CBX Logistics</h1>
         </div>
-        
-        {/* Buttons */}
+
+        {/* Buttons with Hover Effects */}
         <div className="flex space-x-2 mt-3 sm:mt-0">
           <button
             onClick={() => navigateTo('/login?role=employee')}
-            className="bg-yellow-400 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-500"
+            className="bg-yellow-400 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-500 hover:scale-105 transition-transform duration-300 ease-in-out"
           >
             Employee Login
           </button>
           <button
             onClick={() => navigateTo('/login?role=admin')}
-            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out"
           >
             Admin Login
           </button>
@@ -50,7 +53,7 @@ export default function Home() {
         <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">Job Tracker</h2>
         <p className="text-lg sm:text-xl text-gray-200 mb-6">Track your shipment in real-time</p>
 
-        {/* Form to handle Enter key submission */}
+        {/* Form */}
         <form onSubmit={handleTrack} className="flex w-full max-w-md">
           <input
             type="text"
@@ -60,8 +63,8 @@ export default function Home() {
             className="p-3 border border-gray-300 rounded-l-md focus:outline-none w-full"
           />
           <button
-            type="submit"  // This allows the Enter key to trigger the form submission
-            className="bg-blue-600 text-white px-6 py-3 rounded-r-md hover:bg-blue-700"
+            type="submit"
+            className="bg-blue-600 text-white px-6 py-3 rounded-r-md hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out"
           >
             Track
           </button>
@@ -69,31 +72,15 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white p-4 flex flex-col sm:flex-row justify-between items-center">
-        
-        {/* Copyright */}
-        <div className="text-center sm:text-left mb-2 sm:mb-0">
+      <footer className="bg-gray-800 text-white p-4 flex justify-between items-center">
+        <div className="text-center sm:text-left">
           &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved.
         </div>
-
-        {/* Contact Us with Hover - Now aligned to the left */}
-        <div className="relative group">
-          <a href="mailto:info@cbxlogistics.com" className="hover:underline text-white">
+        <div>
+          <a href="mailto:info@cbxlogistics.com" className="hover:underline">
             Contact Us
           </a>
-          <div className="absolute right-full mr-4 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72 text-sm text-left">
-            <p className="font-semibold">CBX Logistics</p>
-            <p>D-2123, Oberoi Garden Estate,<br />
-              Chandivali Farm Road, Sakinaka,<br />
-              Andheri (E), Mumbai - 400 072, India.
-            </p>
-            <p className="mt-2">
-              <strong>Telephone:</strong> +91-(0)22-42215221<br />
-              <strong>Email:</strong> info@cbxlogistics.com
-            </p>
-          </div>
         </div>
-
       </footer>
     </div>
   );
