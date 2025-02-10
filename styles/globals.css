@@ -33,3 +33,13 @@ body {
     align-items: center;
   }
 }
+/* Custom Glow Effect */
+.hover\:drop-shadow-glow:hover {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+
+/* Smooth Button Scaling */
+button:hover {
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1.05);
+} 
