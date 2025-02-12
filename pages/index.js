@@ -5,6 +5,9 @@ import { faFacebookF, faTwitter, faLinkedinIn } from "@fortawesome/free-brands-s
 
 export default function Home() {
   const [jobNumber, setJobNumber] = useState("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]);
+
   const router = useRouter();
 
   const handleTrack = (e) => {
@@ -20,6 +23,18 @@ export default function Home() {
     router.push(path);
   };
 
+  // Updated Predefined Chatbot Questions & Answers
+  const predefinedQA = [
+    { question: "How do I track my shipment?", answer: "Enter your job number and click 'Track' to see the status." },
+    { question: "I can't find my job number, Why?", answer: "Kindly recheck your job number and try again. If it is still absent then mail a query at info@cbxlogistics.com" },
+    { question: "How do I contact support?", answer: "You can email us at info@cbxlogistics.com or call +91-(0)22-42215221." },
+    { question: "Incorrect details in the tracking page?", answer: "Kindly mail us at info@cbxlogistics.com and we will fix the issue as soon as possible." },
+  ];
+
+  const handleQuestionClick = (question, answer) => {
+    setMessages((prev) => [...prev, { text: question, sender: "user" }, { text: answer, sender: "bot" }]);
+  };
+
   return (
     <div className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/background.jpg')" }}>
 
@@ -27,32 +42,21 @@ export default function Home() {
       <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex flex-col sm:flex-row sm:justify-between items-center fixed w-full top-0 z-50">
         <div className="flex items-center space-x-3 cursor-pointer relative">
           <a href="http://cbxlogistics.com" target="_blank" rel="noopener noreferrer">
-  <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto hover:drop-shadow-glow transition-transform duration-300 ease-in-out hover:scale-105" />
+            <img src="/logo.png" alt="CBX Logistics Logo" className="h-12 w-auto hover:drop-shadow-glow transition-transform duration-300 ease-in-out hover:scale-105" />
           </a>
-
-          {/* CBX Logistics with Hover Effect */}
           <div className="relative group">
-            <h1 className="text-xl sm:text-2xl font-bold text-white group-hover:underline">
-              CBX Logistics
-            </h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-white group-hover:underline">CBX Logistics</h1>
             <div className="absolute left-0 mt-2 bg-white text-black p-3 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-80">
               CBX Logistics is established in the year 2001, which is formed by a group of international logistical professionals.
             </div>
           </div>
         </div>
 
-        {/* Buttons with Hover Effects */}
         <div className="flex space-x-2 mt-3 sm:mt-0">
-          <button
-            onClick={() => navigateTo('/login?role=employee')}
-            className="bg-yellow-400 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-500 hover:scale-105 transition-transform duration-300 ease-in-out"
-          >
+          <button onClick={() => navigateTo('/login?role=employee')} className="bg-yellow-400 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-500 hover:scale-105 transition-transform duration-300 ease-in-out">
             Employee Login
           </button>
-          <button
-            onClick={() => navigateTo('/login?role=admin')}
-            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out"
-          >
+          <button onClick={() => navigateTo('/login?role=admin')} className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out">
             Admin Login
           </button>
         </div>
@@ -63,19 +67,11 @@ export default function Home() {
         <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">Job Tracker</h2>
         <p className="text-lg sm:text-xl text-gray-200 mb-6">Track your shipment in real-time</p>
 
-        {/* Form */}
         <form onSubmit={handleTrack} className="flex w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Enter Job Number"
-            value={jobNumber}
-            onChange={(e) => setJobNumber(e.target.value)}
+          <input type="text" placeholder="Enter Job Number" value={jobNumber} onChange={(e) => setJobNumber(e.target.value)}
             className="p-3 border border-gray-300 rounded-l-md focus:outline-none w-full"
           />
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-r-md hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out"
-          >
+          <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-r-md hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out">
             Track
           </button>
         </form>
@@ -83,14 +79,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white p-4 flex justify-between items-center">
-        {/* Copyright */}
         <div className="text-center sm:text-left">
-          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved. Made by Karthik Nambiar
+          &copy; {new Date().getFullYear()} CBX Logistics. All rights reserved.
         </div>
-
-        {/* Contact Us with Hover Info */}
         <div className="relative group flex items-center space-x-4">
-          {/* Social Media Icons on the Right */}
           <div className="flex space-x-4 text-white">
             <a href="https://twitter.com/CBX_Logistics" target="_blank" rel="noopener noreferrer">
               <FontAwesomeIcon icon={faTwitter} className="text-xl hover:scale-110 transition-transform duration-300 ease-in-out" />
@@ -102,27 +94,42 @@ export default function Home() {
               <FontAwesomeIcon icon={faLinkedinIn} className="text-xl hover:scale-110 transition-transform duration-300 ease-in-out" />
             </a>
           </div>
-
-          {/* Contact Us Hover Effect */}
           <div className="relative group">
-            <a href="mailto:info@cbxlogistics.com" className="hover:underline cursor-pointer">
-              Contact Us
-            </a>
-            <div className="absolute right-0 bottom-full mb-2 bg-white text-black p-4 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 w-72 pointer-events-none">
-              <p className="font-semibold">CBX Logistics</p>
-              <p>D-2123, Oberoi Garden Estate,<br />
-                Chandivali Farm Road, Sakinaka,<br />
-                Andheri (E), Mumbai - 400 072, India.
-              </p>
-              <p className="mt-2">
-                <strong>Telephone:</strong> +91-(0)22-42215221<br />
-                <strong>Email:</strong> info@cbxlogistics.com
-              </p>
-            </div>
+            <a href="mailto:info@cbxlogistics.com" className="hover:underline cursor-pointer">Contact Us</a>
           </div>
         </div>
       </footer>
 
+      {/* Chatbot */}
+      <div className="fixed bottom-24 right-5">
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition" onClick={() => setIsChatOpen(!isChatOpen)}>
+          💬 Chat
+        </button>
+        {isChatOpen && (
+          <div className="bg-white w-80 shadow-lg rounded-lg fixed bottom-16 right-5 p-4 border">
+            <div className="flex justify-between items-center border-b pb-2">
+              <h3 className="text-lg font-bold">CBX Chatbot</h3>
+              <button className="text-red-500 font-bold" onClick={() => setIsChatOpen(false)}>×</button>
+            </div>
+            <div className="h-40 overflow-y-auto p-2 space-y-2">
+              {messages.map((msg, index) => (
+                <div key={index} className={`p-2 rounded ${msg.sender === "bot" ? "bg-gray-100" : "bg-blue-500 text-white text-right"}`}>
+                  {msg.text}
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 space-y-2">
+              {predefinedQA.map((qa, index) => (
+                <button key={index} className="bg-gray-200 px-3 py-2 rounded w-full text-left hover:bg-gray-300 transition"
+                  onClick={() => handleQuestionClick(qa.question, qa.answer)}
+                >
+                  {qa.question}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
       {/* Tailwind Custom Styles */}
       <style jsx global>{`
         .hover\\:drop-shadow-glow:hover {
