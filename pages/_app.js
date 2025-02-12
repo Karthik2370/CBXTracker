@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import Head from 'next/head';
-
+import { SpeedInsights } from "@vercel/speed-insights/react";
 function MyApp({ Component, pageProps }) {
   return (
     <>
