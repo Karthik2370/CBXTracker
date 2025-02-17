@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 body {
-  background-color: lightblue;
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Print-specific styling */
