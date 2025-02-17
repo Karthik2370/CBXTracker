@@ -8,14 +8,14 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");  // Success message for password reset
+  const [message, setMessage] = useState(""); // Success message for password reset
   const router = useRouter();
   const { role } = router.query;
 
   const handleLogin = async (e) => {
-    e.preventDefault();  // Prevent page refresh on form submit
-    setError("");  
-    setMessage("");  
+    e.preventDefault(); // Prevent page refresh on form submit
+    setError("");
+    setMessage("");
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -47,8 +47,8 @@ export default function Login() {
   };
 
   const handleResetPassword = async () => {
-    setError("");  
-    setMessage("");  
+    setError("");
+    setMessage("");
 
     if (!email) {
       setError("Please enter your email to reset the password.");
@@ -65,13 +65,20 @@ export default function Login() {
   };
 
   const goToHome = () => {
-    router.push("/");  
+    router.push("/");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div
+      className="flex items-center justify-center min-h-screen"
+      style={{
+        backgroundImage: "url('/background.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="bg-white p-6 rounded-lg shadow-md w-96 relative">
-
         {/* Home Button */}
         <button
           onClick={goToHome}
@@ -108,7 +115,7 @@ export default function Login() {
 
           {/* Login Button */}
           <button
-            type="submit"  // This enables the Enter key submission
+            type="submit" // This enables the Enter key submission
             className="bg-primary text-white w-full py-2 rounded hover:bg-blue-700"
           >
             Login
@@ -117,10 +124,7 @@ export default function Login() {
 
         {/* Reset Password Link */}
         <div className="text-center mt-4">
-          <button
-            onClick={handleResetPassword}
-            className="text-blue-500 hover:underline"
-          >
+          <button onClick={handleResetPassword} className="text-blue-500 hover:underline">
             Forgot Password?
           </button>
         </div>
@@ -128,3 +132,4 @@ export default function Login() {
     </div>
   );
 }
+
