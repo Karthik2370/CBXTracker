@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faTwitter, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
+import { faRobot } from "@fortawesome/free-solid-svg-icons";  // Add the robot icon for the chat button
 
 export default function Home() {
   const [jobNumber, setJobNumber] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]);
-
   const router = useRouter();
 
   const handleTrack = (e) => {
@@ -23,7 +23,6 @@ export default function Home() {
     router.push(path);
   };
 
-  // Updated Predefined Chatbot Questions & Answers
   const predefinedQA = [
     { question: "How do I track my shipment?", answer: "Enter your job number and click 'Track' to see the status." },
     { question: "I can't find my job number, Why?", answer: "Kindly recheck your job number and try again. If it is still absent then mail a query at info@cbxlogistics.com" },
@@ -101,19 +100,23 @@ export default function Home() {
       </footer>
 
       {/* Chatbot */}
-      <div className="fixed bottom-24 right-5">
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition" onClick={() => setIsChatOpen(!isChatOpen)}>
-          💬 Chat
+      <div className={`fixed bottom-24 right-5 transition-all opacity-100 ${isChatOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ zIndex: 100 }}>
+        <button className="bg-blue-600 text-white px-5 py-5 rounded-full shadow-lg hover:bg-blue-700 transition flex justify-center items-center"
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 100 }}
+        >
+          <FontAwesomeIcon icon={faRobot} className="text-3xl" />
         </button>
         {isChatOpen && (
-          <div className="bg-white w-80 shadow-lg rounded-lg fixed bottom-16 right-5 p-4 border">
-            <div className="flex justify-between items-center border-b pb-2">
-              <h3 className="text-lg font-bold">CBX Chatbot</h3>
-              <button className="text-red-500 font-bold" onClick={() => setIsChatOpen(false)}>×</button>
+          <div className="bg-white w-80 shadow-lg rounded-lg fixed bottom-16 right-5 p-4 border transform transition-all" style={{ zIndex: 100 }}>
+            {/* New Avatar with FontAwesome Icon */}
+            <div className="flex justify-center items-center mb-4">
+              <FontAwesomeIcon icon={faRobot} className="text-4xl text-blue-600" />
             </div>
             <div className="h-40 overflow-y-auto p-2 space-y-2">
               {messages.map((msg, index) => (
-                <div key={index} className={`p-2 rounded ${msg.sender === "bot" ? "bg-gray-100" : "bg-blue-500 text-white text-right"}`}>
+                <div key={index} className={`p-2 rounded ${msg.sender === "bot" ? "bg-blue-500 text-white" : "bg-gray-300 text-black text-right"}`}>
+                  {msg.sender === "bot" && <span className="inline-block mr-2"><FontAwesomeIcon icon={faRobot} /></span>}
                   {msg.text}
                 </div>
               ))}
@@ -130,10 +133,11 @@ export default function Home() {
           </div>
         )}
       </div>
+
       {/* Tailwind Custom Styles */}
       <style jsx global>{`
-        .hover\\:drop-shadow-glow:hover {
-          filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+        .transform {
+          transition: transform 0.3s ease-out, opacity 0.3s ease-out;
         }
       `}</style>
     </div>
