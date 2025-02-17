@@ -123,45 +123,59 @@ export default function Home() {
       </footer>
 
       {/* Chatbot */}
-      <div className={`fixed bottom-24 right-5 transition-all opacity-100 ${isChatOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ zIndex: 100 }}>
-        <button className="bg-blue-600 text-white px-5 py-5 rounded-full shadow-lg hover:bg-blue-700 transition flex justify-center items-center"
-          onClick={() => setIsChatOpen(!isChatOpen)}
-          style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 100 }}
-        >
-          <FontAwesomeIcon icon={faRobot} className="text-3xl" />
-        </button>
-        {isChatOpen && (
-          <div className="bg-white w-80 shadow-lg rounded-lg fixed bottom-16 right-5 p-4 border transform transition-all" style={{ zIndex: 100 }}>
-            {/* New Avatar with FontAwesome Icon */}
-            <div className="flex justify-center items-center mb-4">
-              <FontAwesomeIcon icon={faRobot} className="text-4xl text-blue-600" />
-            </div>
-            <div className="h-40 overflow-y-auto p-2 space-y-2">
-              {messages.map((msg, index) => (
-                <div key={index} className={`p-2 rounded ${msg.sender === "bot" ? "bg-blue-500 text-white" : "bg-gray-300 text-black text-right"}`}>
-                  {msg.sender === "bot" && <span className="inline-block mr-2"><FontAwesomeIcon icon={faRobot} /></span>}
-                  <div dangerouslySetInnerHTML={{ __html: msg.text }} />
-                </div>
-              ))}
-            </div>
-            <div className="mt-2 space-y-2">
-              {predefinedQA.map((qa, index) => (
-                <button key={index} className="bg-gray-200 px-3 py-2 rounded w-full text-left hover:bg-gray-300 transition"
-                  onClick={() => handleQuestionClick(qa.question, qa.answer)}
-                >
-                  {qa.question}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+<div className={`fixed bottom-24 right-5 transition-all opacity-100 ${isChatOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ zIndex: 100 }}>
+  <button className="bg-blue-600 text-white px-5 py-5 rounded-full shadow-lg hover:bg-blue-700 transition flex justify-center items-center"
+    onClick={() => setIsChatOpen(!isChatOpen)}
+    style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 100 }}
+  >
+    <FontAwesomeIcon icon={faRobot} className="text-3xl" />
+  </button>
+
+  {isChatOpen && (
+    <div className="bg-white w-80 shadow-lg rounded-lg fixed bottom-16 right-5 p-4 border transform transition-all" style={{ zIndex: 100 }}>
+      
+      {/* Chatbot Header - Avatar on Left, Text on Right */}
+      <div className="flex items-center bg-blue-600 text-white p-3 rounded-t-lg">
+        <FontAwesomeIcon icon={faRobot} className="text-2xl mr-2" /> 
+        <h3 className="text-lg font-bold">I am CBXpert</h3>
       </div>
+      
+      {/* Chat Messages */}
+      <div className="h-40 overflow-y-auto p-2 space-y-2">
+        {messages.map((msg, index) => (
+          <div key={index} className={`p-2 rounded ${msg.sender === "bot" ? "bg-blue-500 text-white" : "bg-gray-300 text-black text-right"}`}>
+            {msg.sender === "bot" && (
+              <span className="inline-block font-bold">CBXpert: </span>
+            )}
+            <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+          </div>
+        ))}
+      </div>
+      
+      {/* Predefined Questions */}
+      <div className="mt-2 space-y-2">
+        {predefinedQA.map((qa, index) => (
+          <button key={index} className="bg-gray-200 px-3 py-2 rounded w-full text-left hover:bg-gray-300 transition"
+            onClick={() => handleQuestionClick(qa.question, qa.answer)}
+          >
+            {qa.question}
+          </button>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
 
       {/* Tailwind Custom Styles */}
       <style jsx global>{`
         .transform {
           transition: transform 0.3s ease-out, opacity 0.3s ease-out;
         }
+      `}</style>
+    </div>
+  );
+}
       `}</style>
     </div>
   );
