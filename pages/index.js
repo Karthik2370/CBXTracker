@@ -26,9 +26,9 @@ export default function Home() {
 
   const predefinedQA = [
     { question: "How do I track my shipment?", answer: "Enter your job number and click 'Track' to see the status." },
-    { question: "I can't find my job number, Why?", answer: "Kindly recheck your job number and try again. If it is still absent then mail a query at info@cbxlogistics.com" },
-    { question: "How do I contact support?", answer: "You can email us at info@cbxlogistics.com or call +91-(0)22-42215221." },
-    { question: "Incorrect details in the tracking page?", answer: "Kindly mail us at info@cbxlogistics.com and we will fix the issue as soon as possible." },
+    { question: "I can't find my job number, Why?", answer: "Kindly recheck your job number and try again. If it is still absent, mail a query at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a>" },
+    { question: "How do I contact support?", answer: "You can email us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> or call +91-(0)22-42215221." },
+    { question: "Incorrect details in the tracking page?", answer: "Kindly mail us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> and we will fix the issue as soon as possible." },
   ];
 
   // Easter egg activation when the word "owner" is typed
@@ -140,7 +140,7 @@ export default function Home() {
               {messages.map((msg, index) => (
                 <div key={index} className={`p-2 rounded ${msg.sender === "bot" ? "bg-blue-500 text-white" : "bg-gray-300 text-black text-right"}`}>
                   {msg.sender === "bot" && <span className="inline-block mr-2"><FontAwesomeIcon icon={faRobot} /></span>}
-                  {msg.text}
+                  <div dangerouslySetInnerHTML={{ __html: msg.text }} />
                 </div>
               ))}
             </div>
