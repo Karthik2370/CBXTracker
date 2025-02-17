@@ -164,7 +164,9 @@ export default function Dashboard() {
       </div>
 
       {/* Greeting */}
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Hello, {employeeName}!</h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 bg-black bg-opacity-50 p-2 rounded">
+           Hello, {employeeName}!
+      </h2>
 
       {/* Update Job Status Form */}
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
