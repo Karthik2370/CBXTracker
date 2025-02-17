@@ -176,7 +176,3 @@ export default function Home() {
     </div>
   );
 }
-      `}</style>
-    </div>
-  );
-}
