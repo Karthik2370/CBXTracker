@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faTwitter, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
-import { faRobot } from "@fortawesome/free-solid-svg-icons";  // Add the robot icon for the chat button
+import { faRobot } from "@fortawesome/free-solid-svg-icons"; 
 
 export default function Home() {
   const [jobNumber, setJobNumber] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]);
+  const [easterEggActive, setEasterEggActive] = useState(false); // State to handle easter egg visibility
   const router = useRouter();
 
   const handleTrack = (e) => {
@@ -29,6 +30,16 @@ export default function Home() {
     { question: "How do I contact support?", answer: "You can email us at info@cbxlogistics.com or call +91-(0)22-42215221." },
     { question: "Incorrect details in the tracking page?", answer: "Kindly mail us at info@cbxlogistics.com and we will fix the issue as soon as possible." },
   ];
+
+  // Easter egg activation when the word "owner" is typed
+  const handleInputChange = (e) => {
+    setJobNumber(e.target.value);
+    if (e.target.value.toLowerCase() === "owner") {
+      setEasterEggActive(true); // Activate Easter egg
+    } else {
+      setEasterEggActive(false); // Deactivate Easter egg if input is not "owner"
+    }
+  };
 
   const handleQuestionClick = (question, answer) => {
     setMessages((prev) => [...prev, { text: question, sender: "user" }, { text: answer, sender: "bot" }]);
@@ -67,13 +78,25 @@ export default function Home() {
         <p className="text-lg sm:text-xl text-gray-200 mb-6">Track your shipment in real-time</p>
 
         <form onSubmit={handleTrack} className="flex w-full max-w-md">
-          <input type="text" placeholder="Enter Job Number" value={jobNumber} onChange={(e) => setJobNumber(e.target.value)}
+          <input
+            type="text"
+            placeholder="Enter Job Number"
+            value={jobNumber}
+            onChange={handleInputChange} // Use the new handleInputChange
             className="p-3 border border-gray-300 rounded-l-md focus:outline-none w-full"
           />
           <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-r-md hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out">
             Track
           </button>
         </form>
+
+       {/* Easter Egg Message */}
+        {easterEggActive && (
+        <div className="mt-4 p-4 bg-yellow-500 text-black rounded shadow-lg">
+        <p className="font-bold">The owner and creator of this website is Mr. Karthik Nambiar.</p>
+        <p>Contact me at <a href="mailto:ramachandrankarthik7@gmail.com" className="text-blue-700 hover:underline">ramachandrankarthik7@gmail.com</a></p>
+        </div>
+       )}
       </div>
 
       {/* Footer */}
