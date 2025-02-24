@@ -46,3 +46,31 @@ button:hover {
   transition: transform 0.3s ease-in-out;
   transform: scale(1.05);
 } 
+
+select, input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Optional: Ensure background image responsiveness and form visibility */
+.min-h-screen {
+  background-attachment: fixed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .w-96 {
+    width: 90%;
+    max-width: 90%;
+  }
+}
