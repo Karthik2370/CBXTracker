@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://cbx-tracker.vercel.app
+
+# Sitemaps
+Sitemap: https://cbx-tracker.vercel.app/sitemap.xml
