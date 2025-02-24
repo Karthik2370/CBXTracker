@@ -1,14 +1,15 @@
-import { useState, useRef, useEffect } from "react"; // Updated for useEffect and useRef
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faTwitter, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link"; // Import Link for client-side navigation
 
 export default function Home() {
-  const [searchValue, setSearchValue] = useState(""); // Renamed from jobNumber to be generic
+  const [searchValue, setSearchValue] = useState("");
   const [searchType, setSearchType] = useState("jobNumber"); // New state for search type
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]); // No persistence
+  const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]);
   const [userInput, setUserInput] = useState(""); // New state for custom input
   const [isBotTyping, setIsBotTyping] = useState(false); // New state for typing indicator
   const [easterEggActive, setEasterEggActive] = useState(false);
@@ -69,7 +70,7 @@ export default function Home() {
         botResponse = "Hello! Welcome to CBX Logistics. How can I assist you today?";
       }
       // Respond to ":help" keyword
-      else if (lowerCaseInput === ":help") {
+      else if (lowerCaseInput.includes("help") || lowerCaseInput.includes("talent")) {
         botResponse = "Here’s how I can help: Ask me about tracking shipments, logging in, contacting support, or reporting issues. Type any of these keywords or use the predefined questions below!";
       }
       // Hidden feature: Respond to queries about the maker of the website
@@ -127,12 +128,16 @@ export default function Home() {
         </div>
 
         <div className="flex space-x-2 mt-3 sm:mt-0">
-          <button onClick={() => navigateTo('/login?role=employee')} className="bg-yellow-400 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-500 hover:scale-105 transition-transform duration-300 ease-in-out">
-            Employee Login
-          </button>
-          <button onClick={() => navigateTo('/login?role=admin')} className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out">
-            Admin Login
-          </button>
+          <Link href="/login?role=employee">
+            <button className="bg-yellow-400 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-500 hover:scale-105 transition-transform duration-300 ease-in-out">
+              Employee Login
+            </button>
+          </Link>
+          <Link href="/login?role=admin">
+            <button className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out">
+              Admin Login
+            </button>
+          </Link>
         </div>
       </nav>
 
@@ -141,11 +146,11 @@ export default function Home() {
         <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">Job Tracker</h2>
         <p className="text-lg sm:text-xl text-gray-200 mb-6">Track your shipment in real-time</p>
 
-        <form onSubmit={handleTrack} className="flex w-full max-w-md">
+        <form onSubmit={handleTrack} className="flex w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden border border-blue-200">
           <select
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
-            className="p-3 border border-gray-300 rounded-l-md focus:outline-none"
+            className="p-4 border-r border-blue-200 rounded-l-xl focus:outline-none bg-blue-50 text-blue-800 hover:bg-blue-100 transition-colors duration-300 appearance-none"
           >
             <option value="jobNumber">Job Number</option>
             <option value="poNumber">PO Number</option>
@@ -155,16 +160,16 @@ export default function Home() {
             placeholder="Enter Job or PO Number"
             value={searchValue}
             onChange={handleInputChange}
-            className="p-3 border border-gray-300 focus:outline-none w-full"
+            className="p-4 border-r border-blue-200 focus:outline-none w-full bg-white text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-600 transition-colors duration-300"
           />
-          <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-r-md hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out">
+          <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-r-xl hover:bg-blue-700 hover:scale-105 transition-transform duration-300 ease-in-out shadow-md">
             Track
           </button>
         </form>
 
         {/* Easter Egg Message */}
         {easterEggActive && (
-          <div className="mt-4 p-4 bg-yellow-500 text-black rounded shadow-lg">
+          <div className="mt-4 p-4 bg-yellow-500 text-black rounded-xl shadow-lg">
             <p className="font-bold">The owner and creator of this website is Mr. Karthik Nambiar.</p>
             <p>Contact me at <a href="mailto:ramachandrankarthik7@gmail.com" className="text-blue-700 hover:underline">ramachandrankarthik7@gmail.com</a></p>
           </div>
@@ -195,7 +200,7 @@ export default function Home() {
       </footer>
 
       {/* Chatbot */}
-      <div className={`fixed bottom-24 right-5 transition-all opacity-100 ${isChatOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ zIndex: 100 }}>
+      <div className={`fixed bottom-24 right-5 transition-all opacity-100 ${isChatOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ zIndex: 50 }}>
         <button
           className="bg-blue-600 text-white px-5 py-5 rounded-full shadow-lg hover:bg-blue-700 transition flex justify-center items-center"
           onClick={() => setIsChatOpen(!isChatOpen)}
@@ -273,13 +278,6 @@ export default function Home() {
           </div>
         )}
       </div>
-
-      {/* Tailwind Custom Styles */}
-      <style jsx global>{`
-        .transform {
-          transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 }
