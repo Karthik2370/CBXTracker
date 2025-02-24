@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, query, where, collection, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 
 export default function JobTracking() {
   const router = useRouter();
-  const { jobNumber } = router.query;
+  const { type, id } = router.query; // Extract type and id from query parameters
   const [jobData, setJobData] = useState(null);
+  const [searchType, setSearchType] = useState("jobNumber"); // Default to jobNumber, but we'll set it from type
+  const [isLoading, setIsLoading] = useState(false); // New loading state
+  const [error, setError] = useState(null); // New error state
 
   const stages = [
     "Pending",
@@ -18,23 +21,52 @@ export default function JobTracking() {
   ];
 
   useEffect(() => {
-    if (jobNumber) {
-      fetchJobData(jobNumber);
+    // Validate type and id before fetching
+    if (!type || !id || (type !== "jobNumber" && type !== "poNumber")) {
+      setError("Invalid tracking request. Please check the URL or try again.");
+      setJobData(null);
+      setIsLoading(false);
+      return;
     }
-  }, [jobNumber]);
 
-  const fetchJobData = async (jobNumber) => {
+    setIsLoading(true); // Start loading
+    setError(null); // Reset error
+    setSearchType(type === "poNumber" ? "poNumber" : "jobNumber");
+    fetchJobData(type === "poNumber" ? "poNumber" : "jobNumber", id)
+      .catch((err) => setError(`Error fetching data: ${err.message}`))
+      .finally(() => setIsLoading(false)); // Stop loading
+  }, [type, id]);
+
+  const fetchJobData = async (searchType, searchValue) => {
     try {
-      const jobRef = doc(db, "jobs", jobNumber);
-      const jobDoc = await getDoc(jobRef);
+      let jobDoc;
+      if (searchType === "jobNumber") {
+        // Search by job number (using document ID)
+        const jobRef = doc(db, "jobs", searchValue);
+        jobDoc = await getDoc(jobRef);
+      } else if (searchType === "poNumber") {
+        // Search by PO number (query the poNumber field)
+        const jobsRef = collection(db, "jobs");
+        const q = query(jobsRef, where("poNumber", "==", searchValue.toLowerCase())); // Handle case sensitivity
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          jobDoc = querySnapshot.docs[0]; // Take the first matching document
+          // If multiple documents match (unlikely based on your data), you could log or handle differently
+          if (querySnapshot.size > 1) {
+            console.warn(`Multiple jobs found for PO number ${searchValue}. Using the first match.`);
+          }
+        }
+      }
 
-      if (jobDoc.exists()) {
-        setJobData(jobDoc.data());
+      if (jobDoc && jobDoc.exists()) {
+        // Ensure jobData includes the document ID as jobNumber for consistency
+        const data = jobDoc.data();
+        setJobData({ ...data, jobNumber: jobDoc.id }); // Add jobNumber as the document ID
       } else {
-        setJobData({ status: "Not Found" });
+        throw new Error("Job not found");
       }
     } catch (error) {
-      console.error("Error fetching job data:", error);
+      throw error; // Let the useEffect catch and handle this
     }
   };
 
@@ -57,16 +89,27 @@ export default function JobTracking() {
   };
 
   const goToHome = () => {
-    router.push("/");
+    if (confirm("Are you sure you want to go back to the home page? Any unsaved changes will be lost.")) {
+      router.push("/");
+    }
   };
 
   const handlePrint = () => {
     window.print();
   };
 
+  const handleRetry = () => {
+    setError(null);
+    setJobData(null);
+    if (type && id) {
+      fetchJobData(searchType, id)
+        .catch((err) => setError(`Error fetching data: ${err.message}`));
+    }
+  };
+
   return (
     <div className="flex flex-col items-center p-4 sm:p-6 min-h-screen bg-gray-100">
-      {/* Home Button */}
+      {/* Home and Print Buttons */}
       <div className="w-full flex justify-between mb-4 print:hidden">
         <button
           onClick={goToHome}
@@ -93,11 +136,26 @@ export default function JobTracking() {
         Track Your Shipment
       </h2>
 
-      {jobData ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center mt-4">
+          <div className="w-8 h-8 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+        </div>
+      ) : error ? (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg max-w-3xl w-full mt-4">
+          <p>{error}</p>
+          <button
+            onClick={handleRetry}
+            className="mt-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      ) : jobData ? (
         <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 w-full max-w-3xl">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
             <h3 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-0">
-              Job Number: <span className="text-primary">{jobNumber}</span>
+              {searchType === "jobNumber" ? "Job Number" : "PO Number"}:{" "}
+              <span className="text-primary">{id}</span>
             </h3>
             <span
               className={`px-4 py-2 rounded ${
@@ -185,9 +243,7 @@ export default function JobTracking() {
             </p>
           )}
         </div>
-      ) : (
-        <p className="text-gray-500 mt-4">Loading shipment details...</p>
-      )}
+      ) : null}
     </div>
   );
 }
