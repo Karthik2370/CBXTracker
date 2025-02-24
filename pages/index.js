@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react"; // Updated for useEffect and useRef
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faTwitter, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
@@ -8,9 +8,13 @@ export default function Home() {
   const [searchValue, setSearchValue] = useState(""); // Renamed from jobNumber to be generic
   const [searchType, setSearchType] = useState("jobNumber"); // New state for search type
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]);
+  const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]); // No persistence
+  const [userInput, setUserInput] = useState(""); // New state for custom input
+  const [isBotTyping, setIsBotTyping] = useState(false); // New state for typing indicator
   const [easterEggActive, setEasterEggActive] = useState(false);
   const router = useRouter();
+
+  const messagesEndRef = useRef(null); // Ref for the end of the messages div to scroll to
 
   const handleTrack = (e) => {
     e.preventDefault();
@@ -44,7 +48,66 @@ export default function Home() {
   };
 
   const handleQuestionClick = (question, answer) => {
-    setMessages((prev) => [...prev, { text: question, sender: "user" }, { text: answer, sender: "bot" }]);
+    handleSendMessage(question, answer); // Use the new handleSendMessage for consistency
+  };
+
+  const handleSendMessage = (question = null, answer = null) => {
+    const messageText = question || userInput;
+    if (messageText.trim() === "") return;
+
+    setMessages((prev) => [...prev, { text: messageText, sender: "user" }]);
+    setUserInput(""); // Clear input after sending
+
+    // Simulate bot response with typing indicator and auto-scroll
+    setIsBotTyping(true);
+    setTimeout(() => {
+      let botResponse;
+      const lowerCaseInput = messageText.toLowerCase();
+
+      // Respond to greetings
+      if (lowerCaseInput === "hi" || lowerCaseInput === "hello" || lowerCaseInput === "hey") {
+        botResponse = "Hello! Welcome to CBX Logistics. How can I assist you today?";
+      }
+      // Respond to ":help" keyword
+      else if (lowerCaseInput === ":help") {
+        botResponse = "Here’s how I can help: Ask me about tracking shipments, logging in, contacting support, or reporting issues. Type any of these keywords or use the predefined questions below!";
+      }
+      // Hidden feature: Respond to queries about the maker of the website
+      else if (lowerCaseInput.includes("maker") || lowerCaseInput.includes("creator") || lowerCaseInput.includes("owner") || lowerCaseInput.includes("made") || lowerCaseInput.includes("built")) {
+        botResponse = "The owner and creator of this website is Mr. Karthik Nambiar. Contact me at <a href='mailto:ramachandrankarthik7@gmail.com'>ramachandrankarthik7@gmail.com</a>";
+      }
+      // Existing keyword-based responses
+      else if (lowerCaseInput.includes("track") || lowerCaseInput.includes("shipment")) {
+        botResponse = "To track your shipment, select 'Job Number' or 'PO Number', enter your number, and click 'Track' on the homepage.";
+      } else if (lowerCaseInput.includes("login") || lowerCaseInput.includes("access")) {
+        botResponse = "You can log in as an employee or admin using the buttons at the top of the page. Visit the login page for more details.";
+      } else if (lowerCaseInput.includes("contact") || lowerCaseInput.includes("support")) {
+        botResponse = "You can email us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> or call +91-(0)22-42215221.";
+      } else if (lowerCaseInput.includes("error") || lowerCaseInput.includes("problem")) {
+        botResponse = "Sorry to hear that! Please email <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> with details, and we’ll assist you.";
+      } else {
+        botResponse = "Sorry, I couldn’t understand that. Try asking a predefined question or contact support at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a>";
+      }
+
+      setMessages((prev) => [...prev, { text: botResponse, sender: "bot" }]);
+      setIsBotTyping(false);
+    }, 1000); // 1-second delay to simulate typing
+  };
+
+  // Auto-scroll to the bottom when messages or isBotTyping change
+  useEffect(() => {
+    if (!isBotTyping) { // Only scroll when the bot is done typing
+      const timer = setTimeout(() => {
+        scrollToBottom();
+      }, 100); // Small delay to ensure DOM updates
+      return () => clearTimeout(timer);
+    }
+  }, [messages, isBotTyping]); // Trigger on messages or typing state change
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
   };
 
   return (
@@ -149,8 +212,8 @@ export default function Home() {
               <h3 className="text-lg font-bold">I am CBXpert</h3>
             </div>
 
-            {/* Chat Messages */}
-            <div className="h-40 overflow-y-auto p-2 space-y-2">
+            {/* Chat Messages with Auto-Scroll */}
+            <div className="h-40 overflow-y-auto p-2 space-y-2" ref={messagesEndRef}>
               {messages.map((msg, index) => (
                 <div key={index} className={`p-2 rounded ${msg.sender === "bot" ? "bg-blue-500 text-white" : "bg-gray-300 text-black text-right"}`}>
                   {msg.sender === "bot" && (
@@ -159,19 +222,53 @@ export default function Home() {
                   <div dangerouslySetInnerHTML={{ __html: msg.text }} />
                 </div>
               ))}
+              {isBotTyping && (
+                <div className="p-2 text-gray-500">CBXpert is typing...</div>
+              )}
             </div>
 
-            {/* Predefined Questions */}
-            <div className="mt-2 space-y-2">
-              {predefinedQA.map((qa, index) => (
-                <button
-                  key={index}
-                  className="bg-gray-200 px-3 py-2 rounded w-full text-left hover:bg-gray-300 transition"
-                  onClick={() => handleQuestionClick(qa.question, qa.answer)}
-                >
-                  {qa.question}
-                </button>
-              ))}
+            {/* Predefined Questions Dropdown */}
+            <div className="mt-2">
+              <select
+                onChange={(e) => {
+                  const selectedQuestion = e.target.value;
+                  if (selectedQuestion) {
+                    const qa = predefinedQA.find(q => q.question === selectedQuestion);
+                    handleSendMessage(qa.question, qa.answer);
+                    e.target.value = ""; // Reset dropdown after selection
+                  }
+                }}
+                className="border p-2 rounded w-full mb-2"
+              >
+                <option value="">Select a Question</option>
+                {predefinedQA.map((qa, index) => (
+                  <option key={index} value={qa.question}>
+                    {qa.question}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Custom Input with Enter Key Support */}
+            <div className="flex mt-2">
+              <input
+                type="text"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleSendMessage();
+                  }
+                }}
+                placeholder="Type your message..."
+                className="border p-2 rounded-l-md w-full"
+              />
+              <button
+                onClick={() => handleSendMessage()}
+                className="bg-blue-600 text-white px-3 py-2 rounded-r-md hover:bg-blue-700"
+              >
+                Send
+              </button>
             </div>
           </div>
         )}
