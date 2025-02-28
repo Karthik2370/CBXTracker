@@ -11,9 +11,9 @@ export default function CookiePolicy() {
         <title>CBX Tracker - Cookie Policy | Understand Our Cookie Usage</title>
         <meta
           name="description"
-          content="Learn how CBX Tracker uses cookies to enhance your experience and improve our site. Review our Cookie Policy for details on analytics and privacy."
+          content="Learn how CBX Tracker uses cookies to enhance your experience and improve our site. Review our Cookie Policy for details on analytics and privacy under Indian law."
         />
-        <meta name="keywords" content="CBX Tracker, cookie policy, cookies, privacy, shipment tracking, Google Analytics, logistics" />
+        <meta name="keywords" content="CBX Tracker, cookie policy, cookies, privacy, shipment tracking, Google Analytics, logistics, India" />
         <meta name="robots" content="index, follow" />
       </Head>
       <div className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/background.jpg')" }}>
@@ -46,20 +46,20 @@ export default function CookiePolicy() {
         </nav>
 
         {/* Responsive "Back to Home" Button (Hidden on Mobile, Visible on Desktop) */}
-<div className="hidden sm:block fixed top-20 left-4 z-50">
-  <Link href="/" legacyBehavior>
-    <a className="flex items-center px-4 py-2 bg-white rounded-lg shadow-md text-blue-600 font-semibold hover:bg-blue-100 hover:shadow-lg transition-all duration-300 ease-in-out">
-      <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
-      Back to Home
-    </a>
-  </Link>
-</div>
+        <div className="hidden sm:block fixed top-20 left-4 z-50">
+          <Link href="/" legacyBehavior>
+            <a className="flex items-center px-4 py-2 bg-white rounded-lg shadow-md text-blue-600 font-semibold hover:bg-blue-100 hover:shadow-lg transition-all duration-300 ease-in-out">
+              <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+              Back to Home
+            </a>
+          </Link>
+        </div>
 
         <div className="flex flex-col items-center justify-center flex-grow pt-24 px-4 bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
             <h1 className="text-3xl font-bold mb-4 text-blue-600">Cookie Policy</h1>
             <p className="text-gray-700 mb-4">Last Updated: March 1, 2025</p>
-            <p className="text-gray-700 mb-4">This Cookie Policy explains how CBX Logistics uses cookies and similar technologies on the CBX Tracker website to enhance your experience and ensure compliance with privacy laws.</p>
+            <p className="text-gray-700 mb-4">This Cookie Policy explains how CBX Logistics uses cookies and similar technologies on the CBX Tracker website to enhance your experience and ensure compliance with privacy laws in India.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">1. What Are Cookies?</h2>
             <p className="text-gray-700 mb-4">Cookies are small text files stored on your device to enhance your browsing experience, provide analytics, and personalize content. They help us understand how you use CBX Tracker and improve our services.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">2. Cookies We Use</h2>
@@ -72,7 +72,7 @@ export default function CookiePolicy() {
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">3. Managing Cookies</h2>
             <p className="text-gray-700 mb-4">You can manage cookie preferences in your browser settings, disable cookies, or contact us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> for assistance. You may also opt out of Google Analytics tracking by visiting <a href="https://tools.google.com/dlpage/gaoptout" className="text-blue-700 hover:underline" target="_blank" rel="noopener noreferrer">Google’s opt-out page</a>.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">4. Your Rights</h2>
-            <p className="text-gray-700 mb-4">Under privacy laws such as GDPR and CCPA, you have the right to access, restrict, or delete cookies stored by CBX Tracker. Contact us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> to exercise these rights or for more information.</p>
+            <p className="text-gray-700 mb-4">Under the Digital Personal Data Protection Act, 2023 (DPDP Act) in India, you have the right to access, correct, restrict, or delete personal data, including cookies stored by CBX Tracker. You can also withdraw consent for data processing at any time. Contact us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> to exercise these rights or for more information.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">5. Contact Us</h2>
             <p className="text-gray-700 mb-4">For cookie-related questions, email us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> or call +91-(0)22-42215221. We’re here to assist with any privacy concerns related to CBX Tracker.</p>
             <p className="text-gray-700 mt-4">Version 1.1 - March 1, 2025</p>
