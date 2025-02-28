@@ -1,6 +1,10 @@
 # *
 User-agent: *
-Allow: /
+Allow: /favicon.ico
+Allow: /favicon-*.png
+Allow: /apple-touch-icon.png
+Allow: /site.webmanifest
+Disallow: /private/
 
 # Host
 Host: https://cbx-tracker.vercel.app
