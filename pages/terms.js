@@ -45,15 +45,15 @@ export default function TermsOfUse() {
           </div>
         </nav>
 
-        {/* Enhanced "Back to Home" Button Below Navigation Bar */}
-        <div className="fixed top-20 left-4 z-50">
-          <Link href="/" legacyBehavior>
-            <a className="flex items-center px-4 py-2 bg-white rounded-lg shadow-md text-blue-600 font-semibold hover:bg-blue-100 hover:shadow-lg transition-all duration-300 ease-in-out">
-              <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
-              Back to Home
-            </a>
-          </Link>
-        </div>
+       {/* Responsive "Back to Home" Button (Hidden on Mobile, Visible on Desktop) */}
+<div className="hidden sm:block fixed top-20 left-4 z-50">
+  <Link href="/" legacyBehavior>
+    <a className="flex items-center px-4 py-2 bg-white rounded-lg shadow-md text-blue-600 font-semibold hover:bg-blue-100 hover:shadow-lg transition-all duration-300 ease-in-out">
+      <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+      Back to Home
+    </a>
+  </Link>
+</div>
 
         <div className="flex flex-col items-center justify-center flex-grow pt-24 px-4 bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">

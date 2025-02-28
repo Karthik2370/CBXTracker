@@ -184,25 +184,44 @@ export default function Home() {
           )}
         </div>
 
-        {/* Footer */}
-        <footer className="bg-gray-800 text-white p-4 flex justify-between items-center">
-          <div className="text-center sm:text-left">
-            © {new Date().getFullYear()} CBX Logistics. All rights reserved. | <Link href="/privacy" legacyBehavior><a className="hover:underline">Privacy Policy</a></Link> | <Link href="/terms" legacyBehavior><a className="hover:underline">Terms of Use</a></Link> | <Link href="/cookies" legacyBehavior><a className="hover:underline">Cookie Policy</a></Link> | <Link href="/disclaimer" legacyBehavior><a className="hover:underline">Disclaimer</a></Link>
+        {/* Updated Footer for Mobile Responsiveness */}
+        <footer className="bg-gray-800 text-white p-4 flex flex-col sm:flex-row sm:justify-between items-center">
+          <div className="text-center sm:text-left mb-4 sm:mb-0">
+            <p className="text-sm sm:text-base">
+              © {new Date().getFullYear()} CBX Logistics. All rights reserved. |{' '}
+              <Link href="/privacy" legacyBehavior>
+                <a className="hover:underline">Privacy Policy</a>
+              </Link>{' '}
+              |{' '}
+              <Link href="/terms" legacyBehavior>
+                <a className="hover:underline">Terms of Use</a>
+              </Link>{' '}
+              |{' '}
+              <Link href="/cookies" legacyBehavior>
+                <a className="hover:underline">Cookie Policy</a>
+              </Link>{' '}
+              |{' '}
+              <Link href="/disclaimer" legacyBehavior>
+                <a className="hover:underline">Disclaimer</a>
+              </Link>
+            </p>
           </div>
-          <div className="relative group flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
             <div className="flex space-x-4 text-white">
-              <a href="https://twitter.com/CBX_Logistics" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faTwitter} className="text-xl hover:scale-110 transition-transform duration-300 ease-in-out" />
+              <a href="https://twitter.com/CBX_Logistics" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300 ease-in-out">
+                <FontAwesomeIcon icon={faTwitter} className="text-xl" />
               </a>
-              <a href="https://www.facebook.com/pages/CBX-Logistics/727157680639503" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faFacebookF} className="text-xl hover:scale-110 transition-transform duration-300 ease-in-out" />
+              <a href="https://www.facebook.com/pages/CBX-Logistics/727157680639503" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300 ease-in-out">
+                <FontAwesomeIcon icon={faFacebookF} className="text-xl" />
               </a>
-              <a href="https://www.linkedin.com/company/cbx-logistics" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faLinkedinIn} className="text-xl hover:scale-110 transition-transform duration-300 ease-in-out" />
+              <a href="https://www.linkedin.com/company/cbx-logistics" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300 ease-in-out">
+                <FontAwesomeIcon icon={faLinkedinIn} className="text-xl" />
               </a>
             </div>
-            <div className="relative group">
-              <a href="mailto:info@cbxlogistics.com" className="hover:underline cursor-pointer">Contact Us</a>
+            <div className="relative group mt-2 sm:mt-0">
+              <a href="mailto:info@cbxlogistics.com" className="hover:underline cursor-pointer text-sm sm:text-base">
+                Contact Us
+              </a>
             </div>
           </div>
         </footer>
