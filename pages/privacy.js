@@ -1,18 +1,23 @@
 import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter, faFacebookF, faLinkedinIn, faArrowLeft } from "@fortawesome/free-solid-svg-icons"; // Added faArrowLeft
+import { faTwitter, faFacebookF, faLinkedinIn } from "@fortawesome/free-brands-svg-icons"; // Updated to free-brands-svg-icons
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"; // Correctly import faArrowLeft from free-solid-svg-icons
 import Link from "next/link";
 
 export default function PrivacyPolicy() {
   return (
     <>
       <Head>
-        <title>CBX Tracker - Privacy Policy</title>
-        <meta name="description" content="Learn about CBX Tracker’s Privacy Policy for handling your personal data securely." />
+        <title>CBX Tracker - Privacy Policy | Understand Our Data Practices</title>
+        <meta
+          name="description"
+          content="Learn how CBX Tracker handles your personal data securely. Review our Privacy Policy for details on shipment tracking and privacy."
+        />
+        <meta name="keywords" content="CBX Tracker, privacy policy, privacy, shipment tracking, logistics, data protection" />
         <meta name="robots" content="index, follow" />
       </Head>
       <div className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/background.jpg')" }}>
-        {/* Navigation Bar (Removed "Home" link) */}
+        {/* Navigation Bar */}
         <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex flex-col sm:flex-row sm:justify-between items-center fixed w-full top-0 z-50">
           <div className="flex items-center space-x-3 cursor-pointer relative">
             <a href="http://cbxlogistics.com" target="_blank" rel="noopener noreferrer">
@@ -53,8 +58,9 @@ export default function PrivacyPolicy() {
         <div className="flex flex-col items-center justify-center flex-grow pt-24 px-4 bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
             <h1 className="text-3xl font-bold mb-4 text-blue-600">Privacy Policy</h1>
-            <p className="text-gray-700 mb-4">Last Updated: February 25, 2025</p>
+            <p className="text-gray-700 mb-4">Last Updated: March 1, 2025</p>
             <p className="text-gray-700 mb-4">This Privacy Policy explains how CBX Logistics collects, uses, and protects your personal information when you use the CBX Tracker website.</p>
+            <p className="text-gray-700 mb-4">We use Google Analytics to track website traffic and user behavior, anonymizing IP addresses to protect your privacy. See our <Link href="/cookies" legacyBehavior><a className="text-blue-700 hover:underline">Cookie Policy</a></Link> for details.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">1. Information We Collect</h2>
             <p className="text-gray-700 mb-4">We may collect job numbers, PO numbers, email addresses, and login credentials for tracking and authentication purposes.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">2. How We Use Your Information</h2>
@@ -65,6 +71,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">You have the right to access, correct, or delete your data. Contact us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> for assistance.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">5. Contact Us</h2>
             <p className="text-gray-700 mb-4">For privacy questions, email us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> or call +91-(0)22-42215221.</p>
+            <p className="text-gray-700 mt-4">Version 1.1 - March 1, 2025</p>
           </div>
         </div>
 

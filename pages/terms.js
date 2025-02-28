@@ -1,17 +1,23 @@
 import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter, faFacebookF, faLinkedinIn, faArrowLeft } from "@fortawesome/free-solid-svg-icons"; // Added faArrowLeft
+import { faTwitter, faFacebookF, faLinkedinIn } from "@fortawesome/free-brands-svg-icons"; // Updated to free-brands-svg-icons
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"; // Correctly import faArrowLeft from free-solid-svg-icons
 import Link from "next/link";
 
 export default function TermsOfUse() {
   return (
     <>
       <Head>
-        <title>CBX Tracker - Terms of Use</title>
-        <meta name="description" content="Review the Terms of Use for using CBX Tracker’s shipment tracking services." />
+        <title>CBX Tracker - Terms of Use | Use Our Shipment Tracking Services</title>
+        <meta
+          name="description"
+          content="Review the Terms of Use for using CBX Tracker’s real-time shipment tracking services. Understand your responsibilities and our policies."
+        />
+        <meta name="keywords" content="CBX Tracker, terms of use, shipment tracking, logistics, job number, PO number" />
         <meta name="robots" content="index, follow" />
       </Head>
       <div className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/background.jpg')" }}>
+        {/* Navigation Bar */}
         <nav className="bg-gray-800 bg-opacity-80 shadow-md p-4 flex flex-col sm:flex-row sm:justify-between items-center fixed w-full top-0 z-50">
           <div className="flex items-center space-x-3 cursor-pointer relative">
             <a href="http://cbxlogistics.com" target="_blank" rel="noopener noreferrer">
@@ -39,6 +45,7 @@ export default function TermsOfUse() {
           </div>
         </nav>
 
+        {/* Enhanced "Back to Home" Button Below Navigation Bar */}
         <div className="fixed top-20 left-4 z-50">
           <Link href="/" legacyBehavior>
             <a className="flex items-center px-4 py-2 bg-white rounded-lg shadow-md text-blue-600 font-semibold hover:bg-blue-100 hover:shadow-lg transition-all duration-300 ease-in-out">
@@ -51,8 +58,9 @@ export default function TermsOfUse() {
         <div className="flex flex-col items-center justify-center flex-grow pt-24 px-4 bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
             <h1 className="text-3xl font-bold mb-4 text-blue-600">Terms of Use</h1>
-            <p className="text-gray-700 mb-4">Last Updated: February 25, 2025</p>
+            <p className="text-gray-700 mb-4">Last Updated: March 1, 2025</p>
             <p className="text-gray-700 mb-4">These Terms of Use govern your use of the CBX Tracker website. By accessing or using our site, you agree to these terms.</p>
+            <p className="text-gray-700 mb-4">We use Google Analytics to track website traffic and user behavior, anonymizing IP addresses to protect your privacy. See our <Link href="/cookies" legacyBehavior><a className="text-blue-700 hover:underline">Cookie Policy</a></Link> for details.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">1. Acceptable Use</h2>
             <p className="text-gray-700 mb-4">You may use CBX Tracker only for lawful purposes and in accordance with these terms. You agree not to use the site for any illegal or unauthorized activities.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">2. Intellectual Property</h2>
@@ -63,6 +71,7 @@ export default function TermsOfUse() {
             <p className="text-gray-700 mb-4">We may terminate or suspend your access to CBX Tracker at any time for violation of these terms.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">5. Contact Us</h2>
             <p className="text-gray-700 mb-4">For questions about these terms, email us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> or call +91-(0)22-42215221.</p>
+            <p className="text-gray-700 mt-4">Version 1.1 - March 1, 2025</p>
           </div>
         </div>
 

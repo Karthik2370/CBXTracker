@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter, faFacebookF, faLinkedinIn, faArrowLeft } from "@fortawesome/free-solid-svg-icons"; // Added faArrowLeft for Back to Home
+import { faTwitter, faFacebookF, faLinkedinIn } from "@fortawesome/free-brands-svg-icons"; // Updated to free-brands-svg-icons
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"; // Correctly import faArrowLeft from free-solid-svg-icons
 import Link from "next/link";
 
 export default function CookiePolicy() {
