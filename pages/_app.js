@@ -42,7 +42,14 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/favicon.png" type="image/png" />
+        {/* Favicon Links Matching Your Files */}
+        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" /> {/* Optional, if needed */}
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-title" content="CBX Tracker" />
+        <link rel="manifest" href="/site.webmanifest" />
+
         <title>CBX Logistics Tracker</title>
         <meta
           name="description"
@@ -56,7 +63,6 @@ function MyApp({ Component, pageProps }) {
         <meta name="robots" content="index, follow" />
       </Head>
 
-      {/* Google Analytics Script with Updated Measurement ID */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=G-L26JJRP35S`}
         strategy="afterInteractive"
