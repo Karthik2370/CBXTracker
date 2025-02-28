@@ -1,27 +1,34 @@
-# CBXTracker
-Job Tracking Website for CBX Logistics Pvt. Ltd. - https://cbx-tracker.vercel.app
+# 🚀 CBXTracker  
+### Job Tracking Website for **CBX Logistics Pvt. Ltd.**  
+🔗 **Live URL:** [cbx-tracker.vercel.app](https://cbx-tracker.vercel.app)  
 
-Copyright images:-
+---
 
--> Background image - CCO use (https://www.pexels.com/photo/view-of-street-from-a-glass-window-531880/)
+## 📸 Copyright Images  
+- 🖼 **Background Image:** [Pexels Link](https://www.pexels.com/photo/view-of-street-from-a-glass-window-531880/)  
+- 🏷 **Favicon:** [UXWing Link](https://uxwing.com/rocket-launch-line-icon/)  
 
--> Favicon - CCO use (https://uxwing.com/rocket-launch-line-icon/)
+---
 
-Tech Stack :-
+## 🛠 Tech Stack  
 
-  -> Frontend: Next.js with React, Tailwind CSS for UI, and FontAwesome for icons.
- 
-  -> Backend: Firebase for authentication, real-time database, and storage.
- 
-  -> Database: Firebase (real-time NoSQL database for tracking data).
- 
-  -> Hosting: Vercel for deployment, performance, and Git integration.
- 
-  -> Analytics: Google Analytics (GA4) for user behavior tracking.
- 
-  -> SEO & Sitemaps: Next.js Head and next-sitemap for optimization.
- 
-  -> Assets: PNG, JPG, ICO, SVG files in public/ for images and favicons.
- 
-  -> PWA: Web Manifest for progressive web app support.
- 
+| **Category**      | **Technology Used**                          |
+|------------------|--------------------------------------------|
+| 🎨 **Frontend**  | Next.js, React, Tailwind CSS, FontAwesome  |
+| 🔥 **Backend**   | Firebase (Authentication, Database, Storage) |
+| 🗄 **Database**  | Firebase (Real-time NoSQL)                 |
+| 🚀 **Hosting**   | Vercel (Git Integration, Performance)       |
+| 📊 **Analytics** | Google Analytics (GA4)                     |
+| 🔍 **SEO**       | Next.js Head, next-sitemap                 |
+| 🎨 **Assets**    | PNG, JPG, ICO, SVG files                   |
+| 📱 **PWA**       | Web Manifest                               |
+
+---
+
+## 📌 Features  
+
+✅ **Real-time job tracking** using Job Number & PO Number  
+✅ **Secure Authentication** with Firebase Auth  
+✅ **User Behavior Tracking** via Google Analytics  
+✅ **SEO Optimized** with Next.js Head and Sitemaps  
+✅ **Deployed on Vercel** for high performance
