@@ -4,11 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faTwitter, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link"; // Import Link for client-side navigation
-import Head from "next/head"; // Import Head for SEO meta tags (added from previous updates)
+import Head from "next/head"; // Import Head for SEO meta tags
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState("");
-  const [searchType, setSearchType] = useState("poNumber"); // Changed default to "poNumber"
+  const [searchType, setSearchType] = useState("poNumber"); // Default to PO Number as per your request
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([{ text: "Hello! How can I assist you?", sender: "bot" }]);
   const [userInput, setUserInput] = useState(""); // New state for custom input
@@ -187,7 +187,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="bg-gray-800 text-white p-4 flex justify-between items-center">
           <div className="text-center sm:text-left">
-            © {new Date().getFullYear()} CBX Logistics. All rights reserved.
+            © {new Date().getFullYear()} CBX Logistics. All rights reserved. | <Link href="/privacy" legacyBehavior><a className="hover:underline">Privacy Policy</a></Link> | <Link href="/terms" legacyBehavior><a className="hover:underline">Terms of Use</a></Link> | <Link href="/cookies" legacyBehavior><a className="hover:underline">Cookie Policy</a></Link> | <Link href="/disclaimer" legacyBehavior><a className="hover:underline">Disclaimer</a></Link>
           </div>
           <div className="relative group flex items-center space-x-4">
             <div className="flex space-x-4 text-white">
@@ -277,7 +277,7 @@ export default function Home() {
                   className="border p-2 rounded-l-md w-full"
                 />
                 <button
-                  onClick={() => handleSendMessage()}
+                  onClick={() => handleSendMessage()} // Fixed syntax error: removed extra closing parenthesis
                   className="bg-blue-600 text-white px-3 py-2 rounded-r-md hover:bg-blue-700"
                 >
                   Send
