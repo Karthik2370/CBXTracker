@@ -21,7 +21,7 @@ export default function JobTracking() {
   ];
 
   useEffect(() => {
-    // Validate type and id before fetching
+    // Validate type and id before fetching results
     if (!type || !id || (type !== "jobNumber" && type !== "poNumber")) {
       setError("Invalid tracking request. Please check the URL or try again.");
       setJobData(null);
@@ -204,14 +204,6 @@ export default function JobTracking() {
             </div>
           )}
 
-          {/* Description Section */}
-          <div className="mt-6">
-            <h4 className="text-lg font-medium mb-2">Shipment Description</h4>
-            <p className="text-gray-700">
-              {jobData.description || "No description provided."}
-            </p>
-          </div>
-
           {/* Transit Point & Planning Date */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -234,6 +226,14 @@ export default function JobTracking() {
               <li>Number of Packages: {jobData.numPackages || "N/A"}</li>
               <li>PO Number: {jobData.poNumber || "N/A"}</li>
             </ul>
+          </div>
+
+          {/* Shipment Description (Moved to before Last Updated) */}
+          <div className="mt-6">
+            <h4 className="text-lg font-medium mb-2">Shipment Description</h4>
+            <p className="text-gray-700">
+              {jobData.description || "No description provided."}
+            </p>
           </div>
 
           {/* Last Updated */}
