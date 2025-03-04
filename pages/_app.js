@@ -5,11 +5,14 @@ import { useEffect, useState } from "react";
 import { auth } from "../firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import Script from "next/script";
+import { CookieConsent } from "react-cookie-consent"; // Import CookieConsent
+import Link from "next/link"; // Import Link for JSX
 
 function MyApp({ Component, pageProps }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [hasConsent, setHasConsent] = useState(false); // Track cookie consent
 
   useEffect(() => {
     setIsLoading(true);
@@ -57,24 +60,44 @@ function MyApp({ Component, pageProps }) {
         />
         <meta
           name="keywords"
-          content="CBX Logistics, shipment tracking, job number, PO number, logistics, shipping"
+          content="CBX Logistics, shipment tracking, job number, PO number, logistics, shipping, India, DPDP Act"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
       </Head>
 
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=G-L26JJRP35S`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-L26JJRP35S');
-        `}
-      </Script>
+      {/* Conditionally load Google Analytics based on consent */}
+      {hasConsent && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=G-L26JJRP35S`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-L26JJRP35S');
+            `}
+          </Script>
+        </>
+      )}
+
+      {/* Cookie Consent Banner with Proper Link Handling */}
+      <CookieConsent
+        enableDeclineButton
+        onAccept={() => setHasConsent(true)}
+        onDecline={() => setHasConsent(false)}
+        buttonText="Accept"
+        declineButtonText="Decline"
+        cookieName="cbxTrackerConsent"
+        style={{ background: '#2d3748', color: '#fff', padding: '1rem' }} // Gray background, white text, Tailwind-like padding
+        buttonStyle={{ background: '#48bb78', color: '#fff', padding: '0.5rem 1rem', borderRadius: '0.375rem' }} // Green button, white text, rounded
+        declineButtonStyle={{ background: '#e53e3e', color: '#fff', padding: '0.5rem 1rem', borderRadius: '0.375rem' }} // Red decline button, white text, rounded
+      >
+        We use cookies to enhance your experience and analyze traffic. By clicking "Accept" or "Decline," you agree to our <Link href="/cookies" passHref legacyBehavior><a className="text-blue-500 hover:underline">Cookie Policy</a></Link>. You can manage your preferences in your browser settings or on this page if you initially declined.
+      </CookieConsent>
 
       {isLoading ? (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">

@@ -37,6 +37,9 @@ export default function Home() {
     { question: "I can't find my job number, Why?", answer: "Kindly recheck your job number or PO number and try again. If it is still absent, mail a query at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a>" },
     { question: "How do I contact support?", answer: "You can email us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> or call +91-(0)22-42215221." },
     { question: "Incorrect details in the tracking page?", answer: "Kindly mail us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> and we will fix the issue as soon as possible." },
+    // Cookie-related predefined questions
+    { question: "What cookies does CBX Tracker use?", answer: "We use cookies for analytics (Google Analytics), functional purposes (e.g., tracking), and preferences to enhance your experience. Learn more in our <Link href='/cookies' legacyBehavior><a className='text-blue-500 hover:underline'>Cookie Policy</a></Link>." },
+    { question: "How do I manage cookie consent?", answer: "When you visit CBX Tracker, a consent banner appears at the bottom of the page. You can accept or decline cookies there. If you declined, visit our <Link href='/cookies' legacyBehavior><a className='text-blue-500 hover:underline'>Cookie Policy</a></Link> page to manage preferences or contact us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a>." },
   ];
 
   // Easter egg activation when the word "owner" is typed
@@ -50,10 +53,10 @@ export default function Home() {
   };
 
   const handleQuestionClick = (question, answer) => {
-    handleSendMessage(question, answer); // Use the new handleSendMessage for consistency
+    handleSendMessage(question, answer, true); // Pass isPredefined=true to indicate a predefined question
   };
 
-  const handleSendMessage = (question = null, answer = null) => {
+  const handleSendMessage = (question = null, answer = null, isPredefined = false) => {
     const messageText = question || userInput;
     if (messageText.trim() === "") return;
 
@@ -66,29 +69,40 @@ export default function Home() {
       let botResponse;
       const lowerCaseInput = messageText.toLowerCase();
 
-      // Respond to greetings
-      if (lowerCaseInput === "hi" || lowerCaseInput === "hello" || lowerCaseInput === "hey") {
-        botResponse = "Hello! Welcome to CBX Logistics. How can I assist you today?";
-      }
-      // Respond to ":help" keyword
-      else if (lowerCaseInput.includes("help") || lowerCaseInput.includes("talent")) {
-        botResponse = "Here’s how I can help: Ask me about tracking shipments, logging in, contacting support, or reporting issues. Type any of these keywords or use the predefined questions below!";
-      }
-      // Hidden feature: Respond to queries about the maker of the website
-      else if (lowerCaseInput.includes("maker") || lowerCaseInput.includes("creator") || lowerCaseInput.includes("owner") || lowerCaseInput.includes("made") || lowerCaseInput.includes("built")) {
-        botResponse = "The owner and creator of this website is Mr. Karthik Nambiar. Contact me at <a href='mailto:ramachandrankarthik7@gmail.com'>ramachandrankarthik7@gmail.com</a>";
-      }
-      // Existing keyword-based responses
-      else if (lowerCaseInput.includes("track") || lowerCaseInput.includes("shipment")) {
-        botResponse = "To track your shipment, select 'Job Number' or 'PO Number', enter your number, and click 'Track' on the homepage.";
-      } else if (lowerCaseInput.includes("login") || lowerCaseInput.includes("access")) {
-        botResponse = "You can log in as an employee or admin using the buttons at the top of the page. Visit the login page for more details.";
-      } else if (lowerCaseInput.includes("contact") || lowerCaseInput.includes("support")) {
-        botResponse = "You can email us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> or call +91-(0)22-42215221.";
-      } else if (lowerCaseInput.includes("error") || lowerCaseInput.includes("problem")) {
-        botResponse = "Sorry to hear that! Please email <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> with details, and we’ll assist you.";
+      if (isPredefined) {
+        // Prioritize predefined question response
+        const qa = predefinedQA.find(q => q.question === messageText);
+        botResponse = qa ? qa.answer : "Sorry, I couldn’t understand that. Try asking a predefined question or contact support at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a>";
       } else {
-        botResponse = "Sorry, I couldn’t understand that. Try asking a predefined question or contact support at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a>";
+        // Keyword-based response for manually typed messages
+        // Respond to greetings
+        if (lowerCaseInput === "hi" || lowerCaseInput === "hello" || lowerCaseInput === "hey") {
+          botResponse = "Hello! Welcome to CBX Logistics. How can I assist you today?";
+        }
+        // Respond to ":help" keyword
+        else if (lowerCaseInput.includes("help") || lowerCaseInput.includes("talent")) {
+          botResponse = "Here’s how I can help: Ask me about tracking shipments, logging in, contacting support, reporting issues, or managing cookies. Type any of these keywords or use the predefined questions below!";
+        }
+        // Hidden feature: Respond to queries about the maker of the website
+        else if (lowerCaseInput.includes("maker") || lowerCaseInput.includes("creator") || lowerCaseInput.includes("owner") || lowerCaseInput.includes("made") || lowerCaseInput.includes("built")) {
+          botResponse = "The owner and creator of this website is Mr. Karthik Nambiar. Contact me at <a href='mailto:ramachandrankarthik7@gmail.com'>ramachandrankarthik7@gmail.com</a>";
+        }
+        // Existing keyword-based responses
+        else if (lowerCaseInput.includes("track") || lowerCaseInput.includes("shipment")) {
+          botResponse = "To track your shipment, select 'Job Number' or 'PO Number', enter your number, and click 'Track' on the homepage.";
+        } else if (lowerCaseInput.includes("login") || lowerCaseInput.includes("access")) {
+          botResponse = "You can log in as an employee or admin using the buttons at the top of the page. Visit the login page for more details.";
+        } else if (lowerCaseInput.includes("contact") || lowerCaseInput.includes("support")) {
+          botResponse = "You can email us at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> or call +91-(0)22-42215221.";
+        } else if (lowerCaseInput.includes("error") || lowerCaseInput.includes("problem")) {
+          botResponse = "Sorry to hear that! Please email <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a> with details, and we’ll assist you.";
+        }
+        // Cookie-related keyword responses for manually typed messages
+        else if (lowerCaseInput.includes("cookie") || lowerCaseInput.includes("cookies")) {
+          botResponse = "We use cookies to enhance your experience and analyze traffic (e.g., Google Analytics). You can manage your preferences via the consent banner or visit our <Link href='/cookies' legacyBehavior><a className='text-blue-500 hover:underline'>Cookie Policy</a></Link> for more details.";
+        } else {
+          botResponse = "Sorry, I couldn’t understand that. Try asking a predefined question or contact support at <a href='mailto:info@cbxlogistics.com'>info@cbxlogistics.com</a>";
+        }
       }
 
       setMessages((prev) => [...prev, { text: botResponse, sender: "bot" }]);
@@ -116,8 +130,8 @@ export default function Home() {
     <>
       <Head>
         <title>CBX Tracker - Real-Time Shipment Tracking</title>
-        <meta name="description" content="Track your shipments in real-time with CBX Tracker. Enter your Job Number or PO Number to check status for Air Cargo and Sea Cargo." />
-        <meta name="keywords" content="CBX Tracker, shipment tracking, job number, PO number, air cargo, sea cargo, logistics tracking" />
+        <meta name="description" content="Track your shipments in real-time with CBX Tracker. Enter your Job Number or PO Number to check status for Air Cargo and Sea Cargo, and learn about cookies." />
+        <meta name="keywords" content="CBX Tracker, shipment tracking, job number, PO number, air cargo, sea cargo, logistics tracking, cookies, cookie policy, India" />
         <meta name="robots" content="index, follow" />
       </Head>
       <div className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/background.jpg')" }}>
@@ -266,7 +280,7 @@ export default function Home() {
                     const selectedQuestion = e.target.value;
                     if (selectedQuestion) {
                       const qa = predefinedQA.find(q => q.question === selectedQuestion);
-                      handleSendMessage(qa.question, qa.answer);
+                      handleSendMessage(qa.question, qa.answer, true); // Pass isPredefined=true
                       e.target.value = ""; // Reset dropdown after selection
                     }
                   }}
@@ -289,14 +303,14 @@ export default function Home() {
                   onChange={(e) => setUserInput(e.target.value)}
                   onKeyPress={(e) => {
                     if (e.key === "Enter") {
-                      handleSendMessage();
+                      handleSendMessage(null, null, false); // Pass isPredefined=false for manual input
                     }
                   }}
                   placeholder="Type your message..."
                   className="border p-2 rounded-l-md w-full"
                 />
                 <button
-                  onClick={() => handleSendMessage()} // Fixed syntax error: removed extra closing parenthesis
+                  onClick={() => handleSendMessage(null, null, false)} // Pass isPredefined=false for manual input
                   className="bg-blue-600 text-white px-3 py-2 rounded-r-md hover:bg-blue-700"
                 >
                   Send

@@ -1,19 +1,49 @@
+"use client"; // Mark as client-side only to ensure browser rendering
+
 import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter, faFacebookF, faLinkedinIn } from "@fortawesome/free-brands-svg-icons"; // Updated to free-brands-svg-icons
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"; // Correctly import faArrowLeft from free-solid-svg-icons
 import Link from "next/link";
+import { useEffect, useState } from "react"; // Import useEffect and useState for client-side logic
+import Cookies from "js-cookie"; // Use js-cookie as an alternative for managing cookies
 
 export default function CookiePolicy() {
+  const [cookies, setCookies] = useState(null); // State to store cookies on client side
+  const [isClient, setIsClient] = useState(false); // Track if we're on the client side
+
+  // Set cookies only on the client side, avoiding SSR issues
+  useEffect(() => {
+    setIsClient(true);
+    const consentCookie = Cookies.get("cbxTrackerConsent");
+    setCookies(consentCookie ? { cbxTrackerConsent: consentCookie } : null);
+  }, []);
+
+  const handleManageCookies = () => {
+    if (isClient) {
+      if (cookies?.cbxTrackerConsent === "true") {
+        // Revoke consent by removing the cookie
+        Cookies.remove("cbxTrackerConsent", { path: "/" });
+        alert("Cookie consent has been revoked. Please refresh the page to see the consent banner again.");
+      } else {
+        // Reset preferences to show the consent banner again
+        Cookies.remove("cbxTrackerConsent", { path: "/" });
+        alert("Cookie preferences have been reset. Please refresh the page to manage your preferences.");
+      }
+      // Update state after cookie change
+      setCookies(Cookies.get("cbxTrackerConsent") ? { cbxTrackerConsent: Cookies.get("cbxTrackerConsent") } : null);
+    }
+  };
+
   return (
     <>
       <Head>
-        <title>CBX Tracker - Cookie Policy | Understand Our Cookie Usage</title>
+        <title>CBX Tracker - Cookie Policy | Understand Our Cookie Usage and Consent in India</title>
         <meta
           name="description"
-          content="Learn how CBX Tracker uses cookies to enhance your experience and improve our site. Review our Cookie Policy for details on analytics and privacy under Indian law."
+          content="Learn how CBX Tracker uses cookies, our consent process, and privacy under Indian law (DPDP Act, 2023). Review our Cookie Policy for analytics, preferences, and managing consent."
         />
-        <meta name="keywords" content="CBX Tracker, cookie policy, cookies, privacy, shipment tracking, Google Analytics, logistics, India" />
+        <meta name="keywords" content="CBX Tracker, cookie policy, cookies, privacy, shipment tracking, Google Analytics, logistics, India, DPDP Act, cookie consent India" />
         <meta name="robots" content="index, follow" />
       </Head>
       <div className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/background.jpg')" }}>
@@ -59,7 +89,7 @@ export default function CookiePolicy() {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
             <h1 className="text-3xl font-bold mb-4 text-blue-600">Cookie Policy</h1>
             <p className="text-gray-700 mb-4">Last Updated: March 1, 2025</p>
-            <p className="text-gray-700 mb-4">This Cookie Policy explains how CBX Logistics uses cookies and similar technologies on the CBX Tracker website to enhance your experience and ensure compliance with privacy laws in India.</p>
+            <p className="text-gray-700 mb-4">This Cookie Policy explains how CBX Logistics uses cookies and similar technologies on the CBX Tracker website to enhance your experience and ensure compliance with privacy laws in India under the Digital Personal Data Protection Act, 2023 (DPDP Act).</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">1. What Are Cookies?</h2>
             <p className="text-gray-700 mb-4">Cookies are small text files stored on your device to enhance your browsing experience, provide analytics, and personalize content. They help us understand how you use CBX Tracker and improve our services.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">2. Cookies We Use</h2>
@@ -70,7 +100,7 @@ export default function CookiePolicy() {
               <li><strong>Preferences:</strong> Cookies store user preferences to enhance your experience on CBX Tracker.</li>
             </ul>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">3. Managing Cookies</h2>
-            <p className="text-gray-700 mb-4">You can manage cookie preferences in your browser settings, disable cookies, or contact us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> for assistance. You may also opt out of Google Analytics tracking by visiting <a href="https://tools.google.com/dlpage/gaoptout" className="text-blue-700 hover:underline" target="_blank" rel="noopener noreferrer">Google’s opt-out page</a>.</p>
+            <p className="text-gray-700 mb-4">You can manage cookie preferences in your browser settings, disable cookies, or contact us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> for assistance. When you visit CBX Tracker, you’ll see a consent banner at the bottom of the page allowing you to accept or decline cookies. If you decline, Google Analytics tracking will be disabled, but functional and preference cookies may still be used for site operation. You may also opt out of Google Analytics tracking by visiting <a href="https://tools.google.com/dlpage/gaoptout" className="text-blue-700 hover:underline" target="_blank" rel="noopener noreferrer">Google’s opt-out page</a>. To manage or update your cookie preferences if you initially declined, click the <button onClick={handleManageCookies} className="inline text-blue-500 hover:underline hover:text-blue-700 cursor-pointer" disabled={!isClient}>Manage Cookies</button> button below. To manage cookies in your browser, refer to settings in Chrome, Firefox, Safari, or other browsers—typically found under Privacy or Security options.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">4. Your Rights</h2>
             <p className="text-gray-700 mb-4">Under the Digital Personal Data Protection Act, 2023 (DPDP Act) in India, you have the right to access, correct, restrict, or delete personal data, including cookies stored by CBX Tracker. You can also withdraw consent for data processing at any time. Contact us at <a href="mailto:info@cbxlogistics.com" className="text-blue-700 hover:underline">info@cbxlogistics.com</a> to exercise these rights or for more information.</p>
             <h2 className="text-2xl font-semibold mt-4 text-blue-600">5. Contact Us</h2>
